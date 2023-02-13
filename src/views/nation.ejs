@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partial/head.ejs') %>
+  <body>
+    <%- include('./partial/navbar.ejs') %>
+    <div
+      class="box"
+      style="padding: 16px 16px 0px 16px; margin: 16px 16px 0 16px"
+    >
+      <form action="/nations/page" method="get">
+        <input
+          type="text"
+          placeholder="Search"
+          name="name"
+          value="<%= searchValue%>"
+        />
+        <input type="submit" />
+      </form>
+      <table class="table" style="width: 100%">
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Flag</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% nations.forEach((nation,index) => { %>
+          <tr>
+            <td><%= index %></td>
+            <td>
+              <figure class="image is-64x64">
+                <img class="is-rounded" src="<%= nation.flagNation%>" />
+              </figure>
+            </td>
+            <td><%= nation.name %></td>
+            <td><%= nation.description %></td>
+            <td>
+              <div class="flex-veritcal">
+                <form action="/nations/<%= nation._id %>" method="post">
+                  <input type="hidden" name="_method" value="delete" />
+                  <input
+                    class="button is-primary"
+                    type="submit"
+                    value="Delete"
+                  />
+                </form>
+
+                <button
+                  class="js-modal-trigger button is-primary"
+                  data-target="modal-js-example"
+                >
+                  Update
+                </button>
+
+                <div id="modal-js-example" class="modal">
+                  <div class="modal-background"></div>
+
+                  <div class="modal-content">
+                    <form action="/nations/<%= nation._id %>" method="post">
+                      <div class="box">
+                        <div class="field">
+                          <label class="label">Name</label>
+                          <div class="control">
+                            <input
+                              class="input"
+                              type="text"
+                              value="<%=nation.name %>"
+                              id="name"
+                              name="name"
+                              placeholder="Text input"
+                            />
+                          </div>
+                        </div>
+                        <div class="field">
+                          <label class="label">Flag Nation</label>
+                          <div class="control">
+                            <input
+                              class="input"
+                              type="text"
+                              id="flagNation"
+                              name="flagNation"
+                              value="<%=nation.flagNation %>"
+                              placeholder="Text input"
+                            />
+                          </div>
+                        </div>
+                        <div class="field">
+                          <label class="label">Description</label>
+                          <div class="control">
+                            <textarea
+                              class="textarea"
+                              id="description"
+                              name="description"
+                              placeholder="Description"
+                            >
+  <%= nation.description %></textarea
+                            >
+                          </div>
+                        </div>
+
+                        <input type="hidden" name="_method" value="put" />
+                        <input
+                          class="button is-primary"
+                          type="submit"
+                          value="Submit"
+                        />
+                      </div>
+                    </form>
+                  </div>
+
+                  <button
+                    class="modal-close is-large"
+                    aria-label="close"
+                  ></button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <button
+      class="js-modal-trigger button-absolute button is-primary"
+      data-target="modal-js-add"
+      style="margin: 16px 16px"
+    >
+      Add Nation
+    </button>
+
+    <div id="modal-js-add" class="modal">
+      <div class="modal-background"></div>
+
+      <div class="modal-content">
+        <div class="box">
+          <h2>Add Nation</h2>
+          <form action="/nations" method="post">
+            <div class="field">
+              <label class="label">Name</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Text input"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Flag Nation</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  id="flagNation"
+                  name="flagNation"
+                  placeholder="Text input"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Description</label>
+              <div class="control">
+                <textarea
+                  class="textarea"
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" type="submit">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+  </body>
+</html>

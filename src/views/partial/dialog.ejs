@@ -1,0 +1,50 @@
+<button
+  class="js-modal-trigger button is-primary"
+  data-target="modal-js-example"
+>
+  Update
+</button>
+
+<div id="modal-js-example" class="modal">
+  <div class="modal-background"></div>
+
+  <div class="modal-content">
+    <form action="/nations/<%= id %>" method="post">
+      <div class="box">
+        <!-- Your content -->
+
+        <div class="field">
+          <label class="label">Name</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              value="<%=name %>"
+              id="name"
+              name="name"
+              placeholder="Text input"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Description</label>
+          <div class="control">
+            <textarea
+              class="textarea"
+              id="description"
+              name="description"
+              placeholder="Description"
+            >
+<%= description %></textarea
+            >
+          </div>
+        </div>
+
+        <input type="hidden" name="_method" value="put" />
+        <input class="button is-primary" type="submit" value="Submit" />
+      </div>
+    </form>
+  </div>
+
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
