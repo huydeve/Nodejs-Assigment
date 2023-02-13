@@ -1,16 +1,16 @@
 class PlayersDTO {
-  name: string | undefined;
-  image: string | undefined;
-  club: string | undefined;
-  position: string | undefined;
-  goals: string | undefined;
-  isCaptain: boolean | undefined;
+  name: string;
+  image: string;
+  club: string;
+  position: string;
+  goals: string;
+  isCaptain: boolean;
   constructor(
-    name: string | undefined,
-    image: string | undefined,
-    club: string | undefined,
-    position: string | undefined,
-    goals: string | undefined,
+    name: string,
+    image: string,
+    club: string,
+    position: string,
+    goals: string,
     isCaptain: boolean
   ) {
     this.name = name;

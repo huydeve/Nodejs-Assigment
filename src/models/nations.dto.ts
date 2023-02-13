@@ -1,12 +1,8 @@
 class NationsDTO {
-  flagNation: string | undefined;
-  name: string | undefined;
-  description: string | undefined;
-  constructor(
-    name: string | undefined,
-    description: string | undefined,
-    flagNation: string | undefined
-  ) {
+  flagNation: string;
+  name: string;
+  description: string;
+  constructor(name: string, description: string, flagNation: string) {
     this.name = name;
     this.description = description;
     this.flagNation = flagNation;
