@@ -1,4 +1,4 @@
-import PlayersDTO from "./Players.dto";
+import PlayersDTO from "./players.dto";
 import Players from "./players.mongo";
 
 class PlayersDAO {

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { getPagination } from "../services/query";
 import { Query } from "../types/nationQuery";
-import PlayersDAO from "../models/Players.dao";
-import PlayersDTO from "../models/Players.dto";
+import PlayersDAO from "../models/players.dao";
+import PlayersDTO from "../models/players.dto";
 
 class PlayersController {
   async httpPlayerPage(req: Request, res: Response) {
