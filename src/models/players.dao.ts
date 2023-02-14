@@ -15,6 +15,8 @@ class PlayersDAO {
   }
 
   async insertPlayer(player: PlayersDTO) {
+    console.log(player);
+
     return await Players.findOneAndUpdate(
       {
         name: player.name,

@@ -16,6 +16,10 @@ const playersSchema = new Schema(
       type: String,
       require: true,
     },
+    nation:{
+      type: String,
+      require: true,
+    },
     position: {
       type: String,
       require: true,

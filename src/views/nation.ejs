@@ -8,13 +8,20 @@
       style="padding: 16px 16px 0px 16px; margin: 16px 16px 0 16px"
     >
       <form action="/nations/page" method="get">
-        <input
-          type="text"
-          placeholder="Search"
-          name="name"
-          value="<%= searchValue%>"
-        />
-        <input type="submit" />
+        <div class="field has-addons">
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              value="<%= searchValue %>"
+              name="name"
+              placeholder="Find a repository"
+            />
+          </div>
+          <div class="control">
+            <input class="button is-info" type="submit" value="Search" />
+          </div>
+        </div>
       </form>
       <table class="table" style="width: 100%">
         <thead>
@@ -40,23 +47,27 @@
             <td><%= nation.description %></td>
             <td>
               <div class="flex-veritcal">
-                <form action="/nations/<%= nation._id %>" method="post">
+                <form
+                  action="/nations/<%= nation._id %>"
+                  method="post"
+                  onsubmit="return validate(this);"
+                >
                   <input type="hidden" name="_method" value="delete" />
                   <input
-                    class="button is-primary"
+                    class="button is-danger"
                     type="submit"
                     value="Delete"
                   />
                 </form>
 
                 <button
-                  class="js-modal-trigger button is-primary"
-                  data-target="modal-js-example"
+                  class="js-modal-trigger button is-warning"
+                  data-target="modal-js-<%=nation._id%>"
                 >
                   Update
                 </button>
 
-                <div id="modal-js-example" class="modal">
+                <div id="modal-js-<%=nation._id%>" class="modal">
                   <div class="modal-background"></div>
 
                   <div class="modal-content">

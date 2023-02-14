@@ -3,21 +3,51 @@ import { getPagination } from "../services/query";
 import { Query } from "../types/nationQuery";
 import PlayersDAO from "../models/players.dao";
 import PlayersDTO from "../models/players.dto";
+import NationsDAO from "../models/nations.dao";
+
+var positions = [
+  "Goalkeeper",
+  "Right Back",
+  "Center Back",
+  "Left Back",
+  "Defensive Midfielder",
+  "Central Midfielder",
+  "Attacking Midfielder",
+  "Right Winger",
+  "Left Winger",
+  "Striker",
+];
+var clubs = [
+  "Manchester United",
+  "Barcelona",
+  "Real Madrid",
+  "Bayern Munich",
+  "Paris Saint-Germain",
+  "Chelsea",
+  "Liverpool",
+  "Juventus",
+  "Manchester City",
+  "Arsenal",
+];
 
 class PlayersController {
   async httpPlayerPage(req: Request, res: Response) {
-    const PlayersDao = new PlayersDAO();
+    const playersDao = new PlayersDAO();
+    const nationsDao = new NationsDAO();
     try {
       const query = req.query as unknown as Query;
       const name = req.query.name as string;
 
       const { skip, limit } = getPagination(query);
-
-      const Players = await PlayersDao.getAllPlayers(skip, limit, name);
+      const nations = await nationsDao.getAllNations(0, 300, "");
+      const players = await playersDao.getAllPlayers(skip, limit, name);
       return res.render("player", {
         title: "Player",
         searchValue: name,
-        // Players,
+        players,
+        positions,
+        clubs,
+        nations,
       });
     } catch (error) {
       return res.send("error");
@@ -25,14 +55,14 @@ class PlayersController {
   }
 
   async httpGetAllPlayers(req: Request, res: Response, next: NextFunction) {
-    const PlayersDao = new PlayersDAO();
+    const playersDao = new PlayersDAO();
     try {
       const query = req.query as unknown as Query;
       const name = req.query.name as string;
       const { skip, limit } = getPagination(query);
-      const Players = await PlayersDao.getAllPlayers(skip, limit, name);
+      const players = await playersDao.getAllPlayers(skip, limit, name);
 
-      res.send(Players);
+      res.send(players);
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
     }
@@ -41,9 +71,9 @@ class PlayersController {
   async httpGetPlayer(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
-      const PlayersDao = new PlayersDAO();
-      const Player = await PlayersDao.getPlayer(id);
-      res.send(Player);
+      const playersDao = new PlayersDAO();
+      const player = await playersDao.getPlayer(id);
+      res.send(player);
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
     }
@@ -51,10 +81,12 @@ class PlayersController {
 
   async httpCreatePlayer(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, club, goals, image, isCaptain, position } =
+      const isCaptain = req.body.isCaptain === "true";
+      const { name, club, goals, image, position, nation } =
         req.body as PlayersDTO;
-      const PlayersDao = new PlayersDAO();
-      await PlayersDao.insertPlayer({
+      const playersDao = new PlayersDAO();
+      await playersDao.insertPlayer({
+        nation,
         name,
         club,
         goals,
@@ -71,8 +103,8 @@ class PlayersController {
   async httpRemovePlayer(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
-      const PlayersDao = new PlayersDAO();
-      await PlayersDao.deletePlayer(id);
+      const playersDao = new PlayersDAO();
+      await playersDao.deletePlayer(id);
       res.redirect("/players/page");
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
@@ -82,9 +114,9 @@ class PlayersController {
   async httpUpdatePlayer(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
-      const Player: PlayersDTO = req.body;
-      const PlayersDao = new PlayersDAO();
-      await PlayersDao.updatePlayer(id, Player);
+      const player: PlayersDTO = req.body;
+      const playersDao = new PlayersDAO();
+      await playersDao.updatePlayer(id, player);
       res.redirect("/players/page");
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
