@@ -43,8 +43,8 @@
           <tr>
             <td><%= index %></td>
             <td>
-              <figure class="image is-64x64">
-                <img class="is-rounded" src="<%= player.image%>" />
+              <figure class="image is-256x256">
+                <img class="" src="<%= player.image%>" />
               </figure>
             </td>
             <td><%= player.name %></td>
@@ -59,6 +59,7 @@
                 <form action="/players/<%= player._id %>" method="post"  onsubmit="return validate(this);">
                   <input type="hidden" name="_method" value="delete" />
                   <input
+                    required
                     class="button is-danger"
                     type="submit"
                     value="Delete"
@@ -86,6 +87,7 @@
                           <label class="label">Name</label>
                           <div class="control">
                             <input
+                              required
                               class="input"
                               type="text"
                               value="<%=player.name %>"
@@ -100,10 +102,11 @@
                           <label class="label">Image</label>
                           <div class="control">
                             <input
+                              required
                               class="input"
                               type="text"
-                              id="flagplayer"
-                              name="flagplayer"
+                              id="image"
+                              name="image"
                               value="<%=player.image %>"
                               placeholder="Text input"
                             />
@@ -141,6 +144,7 @@
                           <label class="label">Goals</label>
                           <div class="control">
                             <input
+                              required
                               class="input"
                               type="number"
                               id="goals"
@@ -227,6 +231,7 @@
                   <label class="label">Name</label>
                   <div class="control">
                     <input
+                    required
                       class="input"
                       type="text"
                       id="name"
@@ -239,6 +244,7 @@
                   <label class="label">Image</label>
                   <div class="control">
                     <input
+                      required
                       class="input"
                       type="text"
                       id="image"
@@ -252,6 +258,7 @@
                   <label class="label">Goals</label>
                   <div class="control">
                     <input
+                    required
                       class="input"
                       type="number"
                       id="goals"
