@@ -1,30 +1,66 @@
+import bodyParser from 'body-parser';
+import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-import path from "path";
-import cookieParser from "cookie-parser";
 import logger from "morgan";
-import indexRouter from "./routes";
-import nationRouter from "./routes/nations.route";
-import playersRouter from "./routes/players.route";
+import passport from "passport";
+import path from "path";
+import { ENV_CONFIG } from "./configs/env.config";
+import authRouter from "./controllers/auth.route";
+import indexRouter from "./controllers/index.controller";
+import nationRouter from "./controllers/nations.route";
+import playersRouter from "./controllers/players.route";
+import session from 'express-session';
+import { sessionStorage } from './middleware/session.middleware';
+import adminRouter from './controllers/admin.route';
+
 
 // var nationsRouter = require("./routes/nations.route");
 // var playersRouter = require("./routes/players.route");
 
 var app = express();
 
+
+
+app.use(session({
+  secret: ENV_CONFIG.GOOGLE_CLIENT_SECRET || "default",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    secure: false, // set to true if using HTTPS
+    httpOnly: true,
+  },
+
+  store: new session.MemoryStore(),
+
+}));
+
+// Configure Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(sessionStorage);
+// Configure body parser middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-console.log(__dirname);
+
+
+
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use((req, res, next) => {
+  console.log(req.body);
+  
   if (req.body)
     switch (req.body._method) {
       case "delete":
@@ -43,7 +79,9 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/nations", nationRouter);
+app.use("/auth", authRouter);
 app.use("/players", playersRouter);
+app.use("/admin", adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
@@ -58,7 +96,7 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.render("error", { message: res.locals.message });
 });
 
 export default app;

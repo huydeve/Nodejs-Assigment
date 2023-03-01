@@ -1,343 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('./partial/head.ejs') %>
-  <body>
-    <%- include('./partial/navbar.ejs') %>
-    <div
-      class="box"
-      style="padding: 16px 16px 0px 16px; margin: 16px 16px 0 16px"
-    >
-    <form action="/players/page" method="get">
-      <div class="field has-addons">
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            value="<%= searchValue %>"
-            name="name"
-            placeholder="Find a repository"
-          />
-        </div>
-        <div class="control">
-          <input class="button is-info" type="submit" value="Search" />
-        </div>
-      </div>
-    </form>
-      <table class="table" style="width: 100%">
-        <thead>
-          <tr>
-            <th>Pos</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Club</th>
-            <th>Position</th>
-            <th>Goals</th>
-            <th>Is Captain</th>
-            <th>Nation</th>
-            <th>Action</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          <% players.forEach((player,index) => { %>
-          <tr>
-            <td><%= index %></td>
-            <td>
-              <figure class="image is-256x256">
-                <img class="" src="<%= player.image%>" />
-              </figure>
-            </td>
-            <td><%= player.name %></td>
-            <td><%= player.club %></td>
-            <td><%= player.position %></td>
-            <td><%= player.goals %></td>
-            <td><%= player.isCaptain %></td>
-            <td><%= player.nation %></td>
-            <td>
-              <div class="flex-veritcal">
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
 
-                <form action="/players/<%= player._id %>" method="post"  onsubmit="return validate(this);">
-                  <input type="hidden" name="_method" value="delete" />
-                  <input
-                    required
-                    class="button is-danger"
-                    type="submit"
-                    value="Delete"
-                  />
+<body>
+    <%- include('./ui/navbar.ejs') %>
+
+        <div class="page-title-player">
+            <div>
+                <h1>Player</h1>
+                <form action="/players/page" method="get">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"
+                                type="text" placeholder="Find a repository">
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-dark">
+                                Search
+                            </button>
+                        </div>
+                    </div>
                 </form>
-
-                <!-- update -->
-                <div>
-                  <button
-                  class="js-modal-trigger button is-warning"
-                  data-target="<%= player._id %>"
-                >
-                  Update
-                </button>
-                </div>
-
-
-                <div id="<%= player._id %>" class="modal">
-                  <div class="modal-background"></div>
-                  <div class="modal-content">
-                    <form action="/players/<%= player._id %>" method="post">
-                      <div class="box">
-
-                        <div class="field">
-                          <label class="label">Name</label>
-                          <div class="control">
-                            <input
-                              required
-                              class="input"
-                              type="text"
-                              value="<%=player.name %>"
-                              id="name"
-                              name="name"
-                              placeholder="Text input"
-                            />
-                          </div>
-                        </div>
-
-                        <div class="field">
-                          <label class="label">Image</label>
-                          <div class="control">
-                            <input
-                              required
-                              class="input"
-                              type="text"
-                              id="image"
-                              name="image"
-                              value="<%=player.image %>"
-                              placeholder="Text input"
-                            />
-                          </div>
-                        </div>
-
-                        <div class="field">
-                          <label class="label">Club</label>
-                          <div class="control">
-                            <div class="select">
-                              <select name="club">
-                                <% clubs.forEach(club => { %>
-                                  <option value="<%=club%>" <%= (player.club === club) ? 'selected' : ''  %>><%=club%></option>
-                                <% }) %>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                
-                        <div class="field">
-                          <label class="label">Position</label>
-                          <div class="control">
-                            <div class="select">
-                              <select name="position">
-                                <% positions.forEach(position => { %>
-                                  <option value="<%=position%>" <%= (player.position === position) ? 'selected' : ''  %>  ><%=position%></option>
-                                <% }) %>
-                              
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                
-                        <div class="field">
-                          <label class="label">Goals</label>
-                          <div class="control">
-                            <input
-                              required
-                              class="input"
-                              type="number"
-                              id="goals"
-                              name="goals"
-                              value="<%=player.goals %>"
-                              placeholder="Text input"
-                            />
-                          </div>
-                        </div>
-                
-                        <div class="field">
-                          <label class="label">Nation</label>
-                          <div class="control">
-                            <div class="select">
-                              <select name="nation">
-                                <% nations.forEach(nation => { %>
-                                  <option value="<%=nation.name%>"  <%= (player.nation === nation.name) ? 'selected' : ''  %>><%=nation.name%></option>
-                                <% }) %>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="field is-horizontal">
-                          <div class="field-label">
-                            <label class="label">Is captain ?</label>
-                          </div>
-                          <div class="field-body">
-                            <div class="field is-narrow">
-                              <div class="control">
-                                <label class="radio">
-                                  <input type="radio" value="true" name="isCaptain"
-                                  <%=  player.isCaptain ? 'checked' : '' %> 
-                                  >
-                                  Yes
-                                </label>
-                                <label class="radio">
-                                  <input type="radio" value="false" name="isCaptain"
-                                  <%=  !player.isCaptain ? 'checked' : '' %> 
-                                  >
-                                  No
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <input type="hidden" name="_method" value="put" />
-                        <input class="button is-primary" type="submit" value="Submit" />
-                      </div>
-                
-
-                    </form>
-                
-                    <button class="modal-close is-large" aria-label="close"></button>
-                  </div>
-                </div>
-
-
-              </div>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-    <button
-      class="js-modal-trigger button-absolute button is-primary"
-      data-target="modal-js-add"
-      style="margin: 16px 16px"
-    >
-      Add player
-    </button>
-
-    <div id="modal-js-add" class="modal">
-      <div class="modal-background"></div>
-
-      <div class="modal-content">
-        <div class="box">
-          <h2>Add player</h2>
-            <form action="/players" method="post">
-              <div class="box">
-                <div class="field">
-                  <label class="label">Name</label>
-                  <div class="control">
-                    <input
-                    required
-                      class="input"
-                      type="text"
-                      id="name"
-                      name="name"
-                      placeholder="Text input"
-                    />
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="label">Image</label>
-                  <div class="control">
-                    <input
-                      required
-                      class="input"
-                      type="text"
-                      id="image"
-                      name="image"
-                      placeholder="Text input"
-                    />
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="label">Goals</label>
-                  <div class="control">
-                    <input
-                    required
-                      class="input"
-                      type="number"
-                      id="goals"
-                      name="goals"
-                      placeholder="Text input"
-                    />
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="label">Club</label>
-                  <div class="control">
-                    <div class="select">
-                      <select name="club">
-                          <% clubs.forEach(club => { %>
-                            <option><%=club%></option>
-                          <% }) %>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-        
-                <div class="field">
-                  <label class="label">Position</label>
-                  <div class="control">
-                    <div class="select">
-                      <select name="position">
-                        <% positions.forEach(position => { %>
-                          <option><%=position%></option>
-                        <% }) %>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-        
-           
-        
-                <div class="field">
-                  <label class="label">Nation</label>
-                  <div class="control">
-                    <div class="select">
-                      <select name="nation">
-                        <% nations.forEach(nation => { %>
-                          <option><%=nation.name%></option>
-                        <% }) %>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="field is-horizontal">
-                  <div class="field-label">
-                    <label class="label">Is captain ?</label>
-                  </div>
-                  <div class="field-body">
-                    <div class="field is-narrow">
-                      <div class="control">
-                        <label class="radio">
-                          <input type="radio" value="true" name="isCaptain">
-                          Yes
-                        </label>
-                        <label class="radio">
-                          <input type="radio" value="false" name="isCaptain" checked>
-                          No
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="field is-grouped" style="display: flex; justify-content: end;">
-                  <div class="control">
-                    <button class="button is-primary" type="submit">Submit</button>
-                  </div>
-                </div>
-          </form>
+            </div>
         </div>
-      </div>
+        <div class="container-players" style="margin: 16px 16px;">
+            <% players.forEach(player=> { %>
+                <a href=<%=`/players/page/${player._id}` %>>
+                    <%- include('./component/card-player.ejs', { player, content:true }) %>
+                        <% }) %>
+                </a>
+        </div>
 
-      <button class="modal-close is-large" aria-label="close"></button>
-    </div>
 
-    </div>
-  </body>
+
+
+</body>
+
+
 </html>

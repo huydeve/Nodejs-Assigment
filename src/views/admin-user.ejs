@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+    <div class="page-title-nation">
+        <div>
+            <h1>User</h1>
+            <form action="/admin/users" method="get">
+
+                <div class="field has-addons">
+                        <div class="control">
+                            <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"type="text" placeholder="Find a repository">
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-dark">
+                                Search
+                            </button>
+                        </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <table class="table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Birth day</th>
+                <th>Is Admin</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% users.forEach((user,index)=> { %>
+                <tr>
+                    <td>
+                        <%= index %>
+                    </td>
+                    <td>
+                        <%= user.name %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td>
+                        <%= user.yob %>
+                    </td>
+                    <td>
+                        <%= user.isAdmin %>
+                    </td>
+                
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>

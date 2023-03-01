@@ -1,7 +1,15 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
-
+export interface IPlayer {
+  name: string;
+  image: string;
+  club: string;
+  position: string;
+  goals: string;
+  isCaptain: boolean;
+  nation: string;
+}
 const playersSchema = new Schema(
   {
     name: {
@@ -16,9 +24,10 @@ const playersSchema = new Schema(
       type: String,
       require: true,
     },
-    nation:{
-      type: String,
-      require: true,
+    nation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Nations',
+      required: true,
     },
     position: {
       type: String,
@@ -38,6 +47,6 @@ const playersSchema = new Schema(
   }
 );
 
-const Players = mongoose.model("Players", playersSchema);
+const Players = mongoose.model<IPlayer>("Players", playersSchema);
 
 export default Players;

@@ -1,0 +1,58 @@
+<% const isNation=typeof nation !=='undefined' %>
+
+    <% const value=isNation ? `-${nation.id}` : '' %>
+        <button class="js-modal-trigger button is-primary <%= typeof absolute !== 'undefined' && `button-absolute` %>"
+            data-target="modal-js<%= value %>">
+            <%=typeof titleButton !=='undefined' ? titleButton : `Add Nation` %>
+
+        </button>
+        <div id="modal-js<%= value %>" class="modal">
+            <div class="modal-background"></div>
+
+            <div class="modal-content">
+                <div class="hero ">
+                    <div class="hero-body is-justify-content-center is-align-items-center ">
+
+                        <div class="columns is-flex is-flex-direction-column box">
+                            <h2>Add Nation</h2>
+                            <form class="form-login" action="/admin/nations" enctype="multipart/form-data"
+                                method="post">
+
+                                <div class="column">
+                                    <label for="name">Name</label>
+                                    <input class="input is-primary" type="text" required name="name"
+                                        value="<%=isNation ? nation.name : `` %>" placeholder="Name of nation">
+                                </div>
+                                <div class="column">
+                                    <label for="name">Description</label>
+                                    <textarea class="input is-primary" type="text" name="description"
+                                        placeholder="Description of nation"><%=isNation ? nation.description : `` %></textarea>
+                                </div>
+                                <div class="column">
+                                    <input type="file" id="myfile" name="image"><br><br>
+                                </div>
+
+                                <div class="column">
+                                    <% if (!isNation) { %>
+                                        <button class="button is-primary is-fullwidth" type="submit">
+                                            Add
+                                        </button>
+                                        <% } else { %>
+                                            <input type="hidden" name="_method" value="put" />
+                                            <input type="hidden" name="id" value="<%= nation._id %>" />
+                                            <button class="button is-primary is-fullwidth" type="submit">
+                                                Update
+                                            </button>
+
+                                            <%}%>
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>

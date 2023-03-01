@@ -7,7 +7,7 @@
 import app from "./app";
 import http from "http";
 import debug from "debug";
-import { mongoConnect } from "./services/mongo";
+import { mongoConnect } from "./configs/mongo.config";
 
 /**
  * Get port from environment and store in Express.

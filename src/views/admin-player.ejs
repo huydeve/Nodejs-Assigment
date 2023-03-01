@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+        <div class="page-title-nation">
+            <div>
+                <h1>Player</h1>
+
+                <form action="/nations/page" method="get">
+
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"
+                                type="text" placeholder="Find a repository">
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-dark">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+
+        <table class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Pos</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Club</th>
+                    <th>Position</th>
+                    <th>Goals</th>
+                    <th>Is Captain</th>
+                    <th>Nation</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% players.forEach((player,index)=> { %>
+                    <tr>
+                        <td>
+                            <%= index %>
+                        </td>
+                        <td>
+                            <figure class="image " style="width: 100px;
+                            height: 100px">
+                                <img class="" src="<%= player.image%>" />
+                            </figure>
+                        </td>
+                        <td>
+                            <%= player.name %>
+                        </td>
+                        <td>
+                            <%= player.club %>
+                        </td>
+                        <td>
+                            <%= player.position %>
+                        </td>
+                        <td>
+                            <%= player.goals %>
+                        </td>
+                        <td>
+                            <%= player.isCaptain %>
+                        </td>
+                        <td>
+                            <%= player.nation.name %>
+                        </td>
+                        <td>
+                            <div class="flex-veritcal" style="display: flex; gap: 16px;">
+                                <form action="/admin/players/<%= player._id %>" method="post"
+                                    onsubmit="return validate(this);">
+                                    <input type="hidden" name="_method" value="delete" />
+                                    <input required class="button is-danger" type="submit" value="Delete" />
+                                </form>
+                                <!-- update -->
+                                <div>
+                                    <%- include('./component/player-button.ejs', {player, titleButton: "Update" }) %>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+        </div>
+
+        <%- include('./component/player-button.ejs', {absolute: true}) %>
+</body>
+
+</html>

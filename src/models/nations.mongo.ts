@@ -1,15 +1,21 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
+export interface INation {
+  image: string;
+  name: string;
+  description: string;
 
+}
 const nationSchema = new Schema(
   {
-    flagNation: {
-      type: String,
-      required: true,
-    },
     name: {
       type: String,
+      required: true,
+      unique: true,
+    },
+    image: {
+      type:String,
       required: true,
       unique: true,
     },
@@ -23,6 +29,6 @@ const nationSchema = new Schema(
   }
 );
 
-const Nations = mongoose.model("Nations", nationSchema);
+const Nations = mongoose.model<INation>("Nations", nationSchema);
 
 export default Nations;
