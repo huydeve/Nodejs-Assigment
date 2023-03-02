@@ -28,6 +28,10 @@
 
             </div>
         </div>
+        <div class="limit-row">
+            <%- include('./component/limit-row.ejs',{url:"/admin/nations", page:currentPage}) %>
+
+        </div>
         <table class="table" style="width: 100%">
             <thead>
                 <tr>
@@ -72,8 +76,9 @@
                     <% }) %>
             </tbody>
         </table>
-        </div>
-        <%- include('./component/nation-button.ejs', {absolute:true}) %>
+        <%- include('./component/pagination.ejs',{url:"/admin/nations"}) %>
+            </div>
+            <%- include('./component/nation-button.ejs', {absolute:true}) %>
 </body>
 
 </html>

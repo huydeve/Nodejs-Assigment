@@ -12,14 +12,21 @@ class NationsController {
       const query = req.query as unknown as Query;
       const searchValue = req.query.searchValue as string;
 
-      const { skip, limit } = getPagination(query);
+      // const { skip, limit } = getPagination(query);
 
-      const nations = await nationsDao.getAllNations(skip, limit, searchValue);
+      const data = await nationsDao.getAllNations(query);
 
       return res.render("nation", {
         title: "Nation",
         searchValue,
-        nations,
+        nations: data.nations,
+        totalPage: data.totalPage,
+        currentPage: data.currentPage,
+        ellipsisEnd: data.ellipsisEnd,
+        ellipsisStart: data.ellipsisStart,
+        end: data.end,
+        start: data.start,
+        limit: data.limit,
       });
     } catch (error) {
       return res.send("error");
@@ -30,11 +37,9 @@ class NationsController {
     const nationsDao = new NationsDAO();
     try {
       const query = req.query as unknown as Query;
-      const name = req.query.name as string;
-      const { skip, limit } = getPagination(query);
-      const nations = await nationsDao.getAllNations(skip, limit, name);
+      const data = await nationsDao.getAllNations(query);
 
-      res.send(nations);
+      res.send(data.nations);
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
     }
@@ -61,7 +66,14 @@ class NationsController {
       await nationsDao.insertNation({ name, description, image: imageUrl });
       return res.redirect("/admin/nations");
     } catch (error) {
-      if (error instanceof Error) res.send(error.message);
+      if (error instanceof Error) {
+        req.flash('error', error.message);
+      }
+
+    }
+    finally {
+      return res.redirect("/admin/players");
+
     }
   }
 
@@ -72,7 +84,7 @@ class NationsController {
       await nationsDao.deleteNation(id);
       res.redirect("/admin/nations");
     } catch (error) {
-      if (error instanceof Error) res.send(error.message);
+
     }
   }
 
@@ -88,9 +100,15 @@ class NationsController {
         ...nation,
         image: imageUrl.length > 0 ? imageUrl : nation.image
       });
-      return res.redirect("/admin/nations");
     } catch (error) {
-      if (error instanceof Error) res.send(error.message);
+      if (error instanceof Error) {
+        req.flash('error', error.message);
+      }
+
+    }
+    finally {
+      return res.redirect("/admin/nations");
+
     }
   }
 }

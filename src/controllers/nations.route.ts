@@ -1,10 +1,12 @@
 import express from "express";
 import NationsController from "./nations.controller";
 import { upload } from "../configs/firebase.config";
+import { checkNotAdmin } from "../middleware/auth.middleware";
 
 const nationsController = new NationsController();
 
 const nationRouter = express.Router();
+nationRouter.use(checkNotAdmin);
 nationRouter.get("/page", nationsController.httpNationPage);
 
 nationRouter.get("/", nationsController.httpGetAllNations);

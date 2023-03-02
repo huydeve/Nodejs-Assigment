@@ -13,7 +13,7 @@ import playersRouter from "./controllers/players.route";
 import session from 'express-session';
 import { sessionStorage } from './middleware/session.middleware';
 import adminRouter from './controllers/admin.route';
-
+import flash from 'connect-flash';
 
 // var nationsRouter = require("./routes/nations.route");
 // var playersRouter = require("./routes/players.route");
@@ -50,7 +50,7 @@ app.set("view engine", "ejs");
 
 
 
-
+app.use(flash());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -59,8 +59,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use((req, res, next) => {
-  console.log(req.body);
-  
+
   if (req.body)
     switch (req.body._method) {
       case "delete":
@@ -76,6 +75,16 @@ app.use((req, res, next) => {
   req.url = req.path;
   next();
 });
+
+app.get('/test', (req, res) => {
+  const errorMessage = req.flash('error');
+  res.render('err', { errorMessage });
+})
+
+app.get('/test-t', (req, res) => {
+  req.flash('error', 'Error creating post: ');
+  res.redirect('/test');
+})
 
 app.use("/", indexRouter);
 app.use("/nations", nationRouter);

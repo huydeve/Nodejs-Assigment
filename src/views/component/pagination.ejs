@@ -1,0 +1,42 @@
+<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    <% if (totalPage>= 1) { %>
+        <ul class="pagination-list">
+            <% if (currentPage> 1) { %>
+                <li>
+                    <a class="pagination-link" href="<%=url%>?page=<%= currentPage - 1 %>&limit=<%=limit%>">
+                        Previous
+                    </a>
+                </li>
+                <% } %>
+                    <% for (let i=start; i <=end; i++) { %>
+                        <% if (i===currentPage) { %>
+                            <li>
+                                <a class="pagination-link is-current" id="current-page" aria-current="page">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } else { %>
+                                <li>
+                                    <a class="pagination-link" href="<%=url%>?page=<%= i %>&limit=<%=limit%>">
+                                        <%= i %>
+                                    </a>
+                                </li>
+                                <% } %>
+                                    <% } %>
+                                        <% if (currentPage < totalPage) { %>
+                                            <li>
+                                                <a class="pagination-link"
+                                                    href="<%=url%>?page=<%= currentPage + 1 %>&limit=<%=limit%>">
+                                                    Next
+                                                </a>
+                                            </li>
+                                            <% } %>
+        </ul>
+        <% if (ellipsisStart) { %>
+            <span class="pagination-ellipsis">&hellip;</span>
+            <% } %>
+                <% if (ellipsisEnd) { %>
+                    <span class="pagination-ellipsis">&hellip;</span>
+                    <% } %>
+                        <% } %>
+</nav>

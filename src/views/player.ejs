@@ -10,12 +10,15 @@
 
         <div class="page-title-player">
             <div>
-                <h1>Player</h1>
+                <h1>Player <%=currentPage%></h1>
                 <form action="/players/page" method="get">
                     <div class="field has-addons">
                         <div class="control">
                             <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"
                                 type="text" placeholder="Find a repository">
+                            <input type="hidden" name="page" value="<%=currentPage%>">
+                            <input type="hidden" name="limit" value="<%=limit%>">
+
                         </div>
                         <div class="control">
                             <button type="submit" class="button is-dark">
@@ -26,6 +29,10 @@
                 </form>
             </div>
         </div>
+        <div>
+            <%- include('./component/limit-row.ejs',{url:"/players/page", page:currentPage}) %>
+
+        </div>
         <div class="container-players" style="margin: 16px 16px;">
             <% players.forEach(player=> { %>
                 <a href=<%=`/players/page/${player._id}` %>>
@@ -35,7 +42,10 @@
         </div>
 
 
+        <div>
+            <%- include('./component/pagination.ejs',{url:"/players/page"}) %>
 
+        </div>
 
 </body>
 

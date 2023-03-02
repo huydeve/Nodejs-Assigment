@@ -17,7 +17,7 @@
             <%- include('./component/card-player.ejs', { player, content:false }) %>
                 <div class="tile is-ancestor" style="margin: 0px 0;">
                     <div class="tile is-vertical is-12">
-                    
+
 
                         <div class="tile is-parent is-vertical">
                             <article class="tile is-child notification is-primary">
@@ -48,6 +48,12 @@
                                 <p class="subtitle">Position</p>
                                 <p class="title">
                                     <%=player.position %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Career</p>
+                                <p class="title">
+                                    <%=player.career %>
                                 </p>
                             </article>
                             <article class="tile is-child notification is-primary">

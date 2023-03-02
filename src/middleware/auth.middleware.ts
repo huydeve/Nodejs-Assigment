@@ -9,3 +9,14 @@ export function checkLoggedIn(req: Request, res: Response, next: Function) {
         return res.redirect("/auth/login/page")
     }
 }
+
+
+export function checkNotAdmin(req: Request, res: Response, next: Function) {
+    const passport = req.session.passport
+    if (req.session && passport) {
+        const { isAdmin } = req.session.passport.user.profile
+        if (isAdmin) return res.redirect("/admin/dashboard");
+    }
+    next()
+
+}

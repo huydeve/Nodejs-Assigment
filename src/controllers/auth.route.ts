@@ -16,7 +16,7 @@ authRouter.get("/registration/page", authController.httpRegistrationPage);
 
 
 authRouter.post("/login", passportConfig.authenticate('local',
-  { failureRedirect: '/auth/login/page', session: true }), (req, res) => {
+  { failureRedirect: '/auth/login/page', session: true, failureFlash: true }), (req, res) => {
     const isAdmin = req.session.passport.user.profile.isAdmin
     if (isAdmin) {
       return res.redirect('/admin/dashboard');

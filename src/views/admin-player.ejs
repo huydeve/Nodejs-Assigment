@@ -11,7 +11,7 @@
             <div>
                 <h1>Player</h1>
 
-                <form action="/nations/page" method="get">
+                <form action="/admin/players" method="get">
 
                     <div class="field has-addons">
                         <div class="control">
@@ -28,7 +28,10 @@
 
             </div>
         </div>
+        <div>
+            <%- include('./component/limit-row.ejs',{url:"/admin/players", page:currentPage}) %>
 
+        </div>
 
         <table class="table" style="width: 100%">
             <thead>
@@ -39,6 +42,7 @@
                     <th>Club</th>
                     <th>Position</th>
                     <th>Goals</th>
+                    <th>Career</th>
                     <th>Is Captain</th>
                     <th>Nation</th>
                     <th>Action</th>
@@ -70,6 +74,9 @@
                             <%= player.goals %>
                         </td>
                         <td>
+                            <%= player.career %>
+                        </td>
+                        <td>
                             <%= player.isCaptain %>
                         </td>
                         <td>
@@ -92,9 +99,11 @@
                     <% }) %>
             </tbody>
         </table>
-        </div>
 
-        <%- include('./component/player-button.ejs', {absolute: true}) %>
+        <%- include('./component/pagination.ejs',{url:"/admin/players"}) %>
+            </div>
+
+            <%- include('./component/player-button.ejs', {absolute: true}) %>
 </body>
 
 </html>

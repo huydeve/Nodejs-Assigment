@@ -34,21 +34,25 @@ var clubs = [
 class PlayersController {
   async httpPlayerPage(req: Request, res: Response) {
     const playersDao = new PlayersDAO();
-    const nationsDao = new NationsDAO();
     try {
       const query = req.query as unknown as Query;
       const searchValue = req.query.searchValue as string;
 
-      const { skip, limit } = getPagination(query);
-      const nations = await nationsDao.getAllNations(0, 300, "");
-      const players = await playersDao.getAllPlayers(skip, limit, searchValue, true);
+      const data = await playersDao.getAllPlayers({ ...query, isCaptain: true });
+      console.log(data);
+      
       return res.render("player", {
         title: "Player",
         searchValue,
-        players,
-        positions,
-        clubs,
-        nations,
+        players: data.players,
+        totalPage: data.totalPage,
+        currentPage: data.currentPage,
+        ellipsisEnd: data.ellipsisEnd,
+        ellipsisStart: data.ellipsisStart,
+        end: data.end,
+        start: data.start,
+        limit: data.limit,
+
       });
     } catch (error) {
       return res.send("error");
@@ -58,7 +62,6 @@ class PlayersController {
 
   async httpPlayerDetailPage(req: Request, res: Response) {
     const playersDao = new PlayersDAO();
-    const nationsDao = new NationsDAO();
     try {
       const { id } = req.params
 
@@ -79,9 +82,7 @@ class PlayersController {
     const playersDao = new PlayersDAO();
     try {
       const query = req.query as unknown as Query;
-      const name = req.query.name as string;
-      const { skip, limit } = getPagination(query);
-      const players = await playersDao.getAllPlayers(skip, limit, name, true);
+      const players = await playersDao.getAllPlayers(query);
 
       res.send(players);
     } catch (error) {
@@ -106,11 +107,14 @@ class PlayersController {
 
       const playersDao = new PlayersDAO();
       let imageUrl: string = '';
-      const { name, club, goals, position, nation } =
+      const { name, club, goals, position, nation, career } =
         req.body;
+      console.log(req.body);
+
       if (req.file)
         imageUrl = await uploadImage(req.file)
       await playersDao.insertPlayer({
+        career,
         nation,
         name,
         club,
@@ -119,9 +123,15 @@ class PlayersController {
         isCaptain,
         position,
       });
-      return res.redirect("/admin/players");
     } catch (error) {
-      if (error instanceof Error) res.send(error.message);
+      if (error instanceof Error) {
+        req.flash('error', error.message);
+      }
+
+    }
+    finally {
+      return res.redirect("/admin/players");
+
     }
   }
 
@@ -132,7 +142,7 @@ class PlayersController {
       await playersDao.deletePlayer(id);
       res.redirect("/admin/players");
     } catch (error) {
-      if (error instanceof Error) res.send(error.message);
+
     }
   }
 
@@ -151,9 +161,15 @@ class PlayersController {
         isCaptain,
         image: imageUrl.length > 0 ? imageUrl : req.body.image
       });
-      return res.redirect("/admin/players");
     } catch (error) {
-      if (error instanceof Error) res.send(error.message);
+      if (error instanceof Error) {
+        req.flash('error', error.message);
+      }
+
+    }
+    finally {
+      return res.redirect("/admin/players");
+
     }
   }
 }

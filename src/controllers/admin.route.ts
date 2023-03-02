@@ -44,7 +44,6 @@ adminRouter.use(upload.single('image'), (req, res, next) => {
 });
 adminRouter.put("/players", playerController.httpUpdatePlayer);
 adminRouter.post("/players", (req, res, next) => {
-    console.log(req.body.nation);
 
     if (!req.body.nation) {
         return res.send("Pls, add least 1 nation in system")

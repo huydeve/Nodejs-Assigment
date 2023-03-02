@@ -1,9 +1,10 @@
 import express from "express";
 import UsersController from "./users.controller";
+import { checkNotAdmin } from "../middleware/auth.middleware";
 
 const usersRouter = express.Router();
 
-
+usersRouter.use(checkNotAdmin);
 
 usersRouter.get('/', new UsersController().httpGetAllUsers)
 

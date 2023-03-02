@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import { verifyPassword } from "../configs/bcrypt.config";
-import { UserToken } from "../configs/session.config";
 import { IUser } from "../models/user.mongo";
 import { default as UsersDAO, default as UsersService } from "../services/users.service";
 
 class AuthController {
   async httpLoginPage(req: Request, res: Response) {
     try {
+      const errorMessage = req.flash('error');
       res.render("login", {
         title: "Login",
+        errorMessage
       });
     } catch (error) {
       return res.send("error");
@@ -23,7 +24,9 @@ class AuthController {
 
   async httpRegistrationPage(req: Request, res: Response) {
     try {
-      res.render("registration", { title: 'Registration page' });
+      const errorMessage = req.flash('error');
+
+      res.render("registration", { title: 'Registration page', errorMessage });
     } catch (error) {
       return res.send("error");
     }
@@ -40,10 +43,15 @@ class AuthController {
         await new UsersDAO().createUser(param)
         return res.redirect('/auth/login/page');
       } else {
-        return res.status(400).send('That email already exisits!');
+        req.flash('error', 'That email already exisits!');
+        return res.redirect('/auth/registration/page');
+
       }
     } catch (error) {
-      return res.send(error as Error);
+      if (error instanceof Error)
+        req.flash('error', error.message);
+        return res.redirect('/auth/registration/page');
+
     }
   }
 
@@ -72,8 +80,11 @@ class AuthController {
 
       req.session.destroy(() => { return res.redirect('/auth/page/login'); });
     } catch (err) {
-      if (err instanceof Error)
-        return res.send(err.message)
+      if (err instanceof Error) {
+        req.flash('error', err.message);
+        return res.redirect('/auth/profile/page')
+
+      }
     }
   }
 
@@ -83,8 +94,8 @@ class AuthController {
     const user: IUser | null = await userService.getUser(req.session.passport.user.profile.email);
     if (!user) throw new Error('User not found')
     let havePassword = user.password.length > 0
-
-    res.render('profile', { userId: userId.user.profile._id, title: "Profile Page", havePassword, });
+    const errorMessage = req.flash('error')
+    return res.render('profile', { userId: userId.user.profile._id, title: "Profile Page", havePassword, errorMessage });
   }
   async httpUpdateProfile(req: Request, res: Response) {
     try {
@@ -94,15 +105,17 @@ class AuthController {
       req.session.passport.user.profile.name = req.body.name
       req.session.passport.user.profile.email = req.body.email
 
-      res.redirect("/auth/profile/page")
 
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('dup key')) {
-          return res.send("Email is already in use")
-
+          req.flash('error', "Email is already in use")
         }
+
       }
+    } finally {
+      return res.redirect("/auth/profile/page")
+
     }
 
   }

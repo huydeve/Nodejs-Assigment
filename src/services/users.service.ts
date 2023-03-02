@@ -1,15 +1,34 @@
 import { hashPassword } from "../configs/bcrypt.config";
 import Users, { IUser } from "../models/user.mongo";
+import { UserQuery } from "../types/nationQuery";
+import { getPagination, getPaginationDetails, queryModel } from "../utils/query";
 
 
 class UsersService {
 
-  async getAllUsers(skip: number, limit: number, name: string | undefined) {
-    const query = name
-      ? { name: { $regex: new RegExp(`.*${name}.*`, "i") } }
-      : {};
+  async getAllUsers(query: UserQuery) {
+    // const query = name
+    //   ? { name: { $regex: new RegExp(`.*${name}.*`, "i") } }
+    //   : {};
 
-    return await Users.find(query, { __v: 0 }).skip(skip).limit(limit);
+    const { skip, limit, page } = getPagination({
+      limit: query.limit,
+      page: query.page,
+    });
+
+
+    const mongoQuery = {
+      $or: [
+        { name: { $regex: query.searchValue || '', $options: 'i' } },
+        { email: { $regex: query.searchValue || '', $options: 'i' } },
+      ],
+    };
+
+    const { count, models } = await queryModel(Users, mongoQuery, skip, limit)
+
+    return {
+      users: models, ...getPaginationDetails(count, limit, page)
+    }
   }
 
   async getUser(email: string) {

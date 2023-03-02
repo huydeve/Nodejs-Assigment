@@ -1,0 +1,11 @@
+<div style="display: flex; justify-content: end; margin: 16px;">
+    <div class="select">
+        <select id="my-select" onchange="handleChangeValue(`<%=url%>`)">
+
+            <% [5,10,15].forEach(row=> { %>
+                <option value="<%=row%>" <%=(limit && limit===row) ? 'selected' : '' %>><%=row%>
+                </option>
+                <% }) %>
+        </select>
+        </p>
+    </div>

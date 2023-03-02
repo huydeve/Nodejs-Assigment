@@ -1,11 +1,13 @@
 import express from "express";
 import PlayersController from "./players.controller";
+import { checkNotAdmin } from "../middleware/auth.middleware";
 const playersRouter = express.Router();
 const playersController = new PlayersController();
 playersRouter.use((req, res, next) => {
   res.statusCode = 200;
   next();
 });
+playersRouter.use(checkNotAdmin);
 
 
 playersRouter.get("/page", playersController.httpPlayerPage);

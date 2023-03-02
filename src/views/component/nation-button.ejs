@@ -17,35 +17,45 @@
                             <h2>Add Nation</h2>
                             <form class="form-login" action="/admin/nations" enctype="multipart/form-data"
                                 method="post">
+                                <% if (errorMessage.length> 0) { %>
 
-                                <div class="column">
-                                    <label for="name">Name</label>
-                                    <input class="input is-primary" type="text" required name="name"
-                                        value="<%=isNation ? nation.name : `` %>" placeholder="Name of nation">
-                                </div>
-                                <div class="column">
-                                    <label for="name">Description</label>
-                                    <textarea class="input is-primary" type="text" name="description"
-                                        placeholder="Description of nation"><%=isNation ? nation.description : `` %></textarea>
-                                </div>
-                                <div class="column">
-                                    <input type="file" id="myfile" name="image"><br><br>
-                                </div>
+                                    <div class="column">
 
-                                <div class="column">
-                                    <% if (!isNation) { %>
-                                        <button class="button is-primary is-fullwidth" type="submit">
-                                            Add
-                                        </button>
-                                        <% } else { %>
-                                            <input type="hidden" name="_method" value="put" />
-                                            <input type="hidden" name="id" value="<%= nation._id %>" />
-                                            <button class="button is-primary is-fullwidth" type="submit">
-                                                Update
-                                            </button>
+                                        <div class="notification is-danger">
+                                                <%= errorMessage %>
 
-                                            <%}%>
-                                </div>
+                                        </div>
+                                    </div>
+
+                                    <% } %>
+                                        <div class="column">
+                                            <label for="name">Name</label>
+                                            <input class="input is-primary" type="text" required name="name"
+                                                value="<%=isNation ? nation.name : `` %>" placeholder="Name of nation">
+                                        </div>
+                                        <div class="column">
+                                            <label for="name">Description</label>
+                                            <textarea class="input is-primary" type="text" name="description"
+                                                placeholder="Description of nation"><%=isNation ? nation.description : `` %></textarea>
+                                        </div>
+                                        <div class="column">
+                                            <input type="file" id="myfile" name="image"><br><br>
+                                        </div>
+
+                                        <div class="column">
+                                            <% if (!isNation) { %>
+                                                <button class="button is-primary is-fullwidth" type="submit">
+                                                    Add
+                                                </button>
+                                                <% } else { %>
+                                                    <input type="hidden" name="_method" value="put" />
+                                                    <input type="hidden" name="id" value="<%= nation._id %>" />
+                                                    <button class="button is-primary is-fullwidth" type="submit">
+                                                        Update
+                                                    </button>
+
+                                                    <%}%>
+                                        </div>
                             </form>
 
                         </div>

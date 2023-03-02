@@ -20,7 +20,7 @@ const generateToken = (user: IUser): string => {
 
   };
 
-  return jwt.sign(payload, ENV_CONFIG.JWT_SECRET!, { expiresIn: '1min' });
+  return jwt.sign(payload, ENV_CONFIG.JWT_SECRET!, { expiresIn: '1h' });
 };
 
 const verifyToken = (req: Request) => {

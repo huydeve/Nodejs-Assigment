@@ -9,18 +9,24 @@ export interface IPlayer {
   goals: string;
   isCaptain: boolean;
   nation: string;
+  career: string
 }
 const playersSchema = new Schema(
   {
     name: {
       type: String,
       require: true,
+      unique: true,
     },
     image: {
       type: String,
       require: true,
     },
     club: {
+      type: String,
+      require: true,
+    },
+    career: {
       type: String,
       require: true,
     },

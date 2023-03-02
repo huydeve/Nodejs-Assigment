@@ -13,8 +13,6 @@ admin.initializeApp({
 export const bucket = admin.storage().bucket()
 
 
-
-
 // Multer configuration
 const storage = multer.memoryStorage();
 export const upload = multer({

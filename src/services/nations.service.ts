@@ -1,13 +1,29 @@
 import Nations, { INation } from "../models/nations.mongo";
+import { NationQuery } from "../types/nationQuery";
+import { getPagination, getPaginationDetails, queryModel } from "../utils/query";
 class NationsService {
-  async getAllNations(skip: number, limit: number, name: string | undefined) {
-    const query = name
-      ? { name: { $regex: new RegExp(`.*${name}.*`, "i") } }
-      : {
-        
-      };
+  async getAllNations(query: NationQuery) {
 
-    return await Nations.find(query, { __v: 0 }).skip(skip).limit(limit);
+
+    const { skip, limit, page } = getPagination({
+      limit: query.limit,
+      page: query.page,
+    });
+
+
+
+    const mongoQuery = {
+      $or: [
+        { name: { $regex: query.searchValue || '', $options: 'i' } },
+      ],
+    };
+
+    const data = await queryModel(Nations, mongoQuery, skip, limit)
+
+
+    return {
+      nations: data.models, ...getPaginationDetails(data.count, limit, page)
+    }
   }
 
   async getNation(id: string) {
@@ -15,14 +31,8 @@ class NationsService {
   }
 
   async insertNation(nation: INation) {
-    return await Nations.findOneAndUpdate(
-      {
-        name: nation.name,
-      },
+    return await Nations.create(
       nation,
-      {
-        upsert: true,
-      }
     );
   }
 

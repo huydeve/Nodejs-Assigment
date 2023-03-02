@@ -1,18 +1,51 @@
+import { Model, PopulateOptions } from "mongoose";
 import Players, { IPlayer } from "../models/players.mongo";
+import { PlayerQuery } from "../types/nationQuery";
+import { getPagination, getPaginationDetails, queryModel } from "../utils/query";
 
 class PlayersService {
-  async getAllPlayers(skip: number, limit: number, name: string | undefined, isCaptain: boolean | undefined) {
-    let query: any = {}
 
 
-    if (name) query.name = { $regex: new RegExp(`.*${name}.*`, "i") }
-    
-    if (typeof isCaptain === "boolean") query.isCaptain = isCaptain
-    console.log(query);
 
-    return await Players.find({
-      ...query
-    }, { __v: 0 }).skip(skip).limit(limit).populate('nation');
+
+
+
+
+
+
+
+
+
+
+  async getAllPlayers(query: PlayerQuery) {
+
+
+    const { skip, limit, page } = getPagination({
+      limit: query.limit,
+      page: query.page,
+    });
+    const mongoQuery: any = {
+      $or: [
+        { name: { $regex: query.searchValue || '', $options: 'i' } },
+        { club: { $regex: query.searchValue || '', $options: 'i' } },
+        { position: { $regex: query.searchValue || '', $options: 'i' } },
+      ],
+    };
+    if (typeof query.isCaptain !== 'undefined') mongoQuery.isCaptain = query.isCaptain;
+
+
+
+    const data = await queryModel<IPlayer>(Players, mongoQuery, skip, limit, 'nation', {
+      path: 'nation',
+      match: { name: { $regex: query.searchValue || '', $options: 'i' } },
+    })
+
+
+
+    return {
+      players: data.models,
+      ...getPaginationDetails(data.count, limit, page)
+    };
   }
 
   async getPlayer(id: string) {
@@ -21,20 +54,12 @@ class PlayersService {
 
   async insertPlayer(player: IPlayer) {
 
-
-    return await Players.findOneAndUpdate(
-      {
-        name: player.name,
-      },
+    return await Players.create(
       player,
-      {
-        upsert: true,
-      }
     );
   }
 
   async updatePlayer(id: string, Player: IPlayer) {
-
 
     return await Players.findByIdAndUpdate(id, Player, {
       upsert: true,

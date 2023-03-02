@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import NationsDAO from "../services/nations.service";
 import { getPagination } from "../utils/query";
-import { Query } from "../types/nationQuery";
+import { NationQuery, Query } from "../types/nationQuery";
 import { INation } from "../models/nations.mongo";
 import NationsService from "../services/nations.service";
 import PlayersService from "../services/players.service";
@@ -48,19 +48,26 @@ class AdminController {
             const query = req.query as unknown as Query;
             const searchValue = req.query.searchValue as string;
 
-            const { skip, limit } = getPagination(query);
 
-            const players = await new PlayersService().getAllPlayers(skip, limit, searchValue, undefined);
-            const nations = await new NationsService().getAllNations(0, 300, "");
 
+            const dataPlayers = await new PlayersService().getAllPlayers(query);
+            const dataNations = await new NationsService().getAllNations({ limit: 300 });
 
             return res.render("admin-player", {
                 title: "Player",
-                players,
+                players: dataPlayers.players,
+                totalPage: dataPlayers.totalPage,
+                currentPage: dataPlayers.currentPage,
+                ellipsisEnd: dataPlayers.ellipsisEnd,
+                ellipsisStart: dataPlayers.ellipsisStart,
+                end: dataPlayers.end,
+                start: dataPlayers.start,
+                limit: dataPlayers.limit,
                 searchValue,
                 positions,
                 clubs,
-                nations,
+                nations: dataNations.nations,
+                errorMessage:req.flash('error')
             });
         } catch (error) {
             if (error instanceof Error) res.send(error.message);
@@ -70,17 +77,25 @@ class AdminController {
     async httpNations(req: Request, res: Response, next: NextFunction) {
         try {
 
-            const query = req.query as unknown as Query;
-            const searchValue = req.query.searchValue as string;
+            const query = req.query as unknown as NationQuery;
+            const searchValue = req.query.seachValue as string;
 
-            const { skip, limit } = getPagination(query);
 
-            const nations = await new NationsService().getAllNations(skip, limit, searchValue);
+            const data = await new NationsService().getAllNations(query);
 
             return res.render("admin-nation", {
                 title: "Nation",
-                nations,
+                nations: data.nations,
+                totalPage: data.totalPage,
+                currentPage: data.currentPage,
+                ellipsisEnd: data.ellipsisEnd,
+                ellipsisStart: data.ellipsisStart,
+                end: data.end,
+                start: data.start,
                 searchValue,
+                limit: data.limit,
+                errorMessage:req.flash('error')
+
             });
         } catch (error) {
             if (error instanceof Error) res.send(error.message);
@@ -94,15 +109,24 @@ class AdminController {
             const query = req.query as unknown as Query;
             const searchValue = req.query.searchValue as string;
 
-            const { skip, limit } = getPagination(query);
+            // const { skip, limit } = getPagination(query);
 
-            const users = await new UsersService().getAllUsers(skip, limit, searchValue);
+            const data = await new UsersService().getAllUsers(query);
 
 
             return res.render("admin-user", {
                 title: "User",
-                users,
+                users: data.users,
+                totalPage: data.totalPage,
+                currentPage: data.currentPage,
+                ellipsisEnd: data.ellipsisEnd,
+                ellipsisStart: data.ellipsisStart,
+                end: data.end,
+                start: data.start,
                 searchValue,
+                limit: data.limit,
+                errorMessage:req.flash('error')
+
             });
         } catch (error) {
             if (error instanceof Error) res.send(error.message);
