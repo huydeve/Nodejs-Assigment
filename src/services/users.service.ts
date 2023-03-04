@@ -6,7 +6,7 @@ import { getPagination, getPaginationDetails, queryModel } from "../utils/query"
 
 class UsersService {
 
-  async getAllUsers(query: UserQuery) {
+  async getAllUsers(query: UserQuery, userEmail: string) {
     // const query = name
     //   ? { name: { $regex: new RegExp(`.*${name}.*`, "i") } }
     //   : {};
@@ -18,6 +18,7 @@ class UsersService {
 
 
     const mongoQuery = {
+      email: { $not: { $regex: userEmail, $options: 'i' } },
       $or: [
         { name: { $regex: query.searchValue || '', $options: 'i' } },
         { email: { $regex: query.searchValue || '', $options: 'i' } },

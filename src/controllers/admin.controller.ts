@@ -67,7 +67,7 @@ class AdminController {
                 positions,
                 clubs,
                 nations: dataNations.nations,
-                errorMessage:req.flash('error')
+                errorMessage: req.flash('error')
             });
         } catch (error) {
             if (error instanceof Error) res.send(error.message);
@@ -94,7 +94,7 @@ class AdminController {
                 start: data.start,
                 searchValue,
                 limit: data.limit,
-                errorMessage:req.flash('error')
+                errorMessage: req.flash('error')
 
             });
         } catch (error) {
@@ -108,10 +108,10 @@ class AdminController {
 
             const query = req.query as unknown as Query;
             const searchValue = req.query.searchValue as string;
-
+            const user = req.session.passport.user.profile.email
             // const { skip, limit } = getPagination(query);
 
-            const data = await new UsersService().getAllUsers(query);
+            const data = await new UsersService().getAllUsers(query, user);
 
 
             return res.render("admin-user", {
@@ -125,7 +125,7 @@ class AdminController {
                 start: data.start,
                 searchValue,
                 limit: data.limit,
-                errorMessage:req.flash('error')
+                errorMessage: req.flash('error')
 
             });
         } catch (error) {

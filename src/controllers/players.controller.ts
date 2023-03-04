@@ -40,7 +40,7 @@ class PlayersController {
 
       const data = await playersDao.getAllPlayers({ ...query, isCaptain: true });
       console.log(data);
-      
+
       return res.render("player", {
         title: "Player",
         searchValue,
@@ -125,7 +125,9 @@ class PlayersController {
       });
     } catch (error) {
       if (error instanceof Error) {
-        req.flash('error', error.message);
+        if (error.message.includes('dup key')) {
+          req.flash('error', "Name is already in use")
+        }
       }
 
     }
@@ -163,7 +165,11 @@ class PlayersController {
       });
     } catch (error) {
       if (error instanceof Error) {
-        req.flash('error', error.message);
+        if (error.message.includes('dup key')) {
+          req.flash('error', "Name is already in use")
+        }
+        req.flash('error', error.message)
+
       }
 
     }

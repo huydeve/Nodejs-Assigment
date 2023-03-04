@@ -70,10 +70,14 @@ class AuthController {
 
 
         if (!isMatch) {
-          throw new Error(`invalid password`)
+          throw new Error(`Password is not correct!`)
         }
       }
 
+      if(oldPassword === newPassword ) {  
+        throw new Error(`Pls Enter New Password different with Old Password!`)
+
+      }
 
 
       await userService.updateUserPassword(req.session.passport.user.profile._id, newPassword)

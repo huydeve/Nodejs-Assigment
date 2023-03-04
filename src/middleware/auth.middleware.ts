@@ -4,6 +4,8 @@ import { verifyToken } from "../configs/jwt.config";
 export function checkLoggedIn(req: Request, res: Response, next: Function) {
     try {
         req.body.userId = verifyToken(req)
+        console.log(req.session.passport.user.jwtToken);
+        
         next()
     } catch (error) {
         return res.redirect("/auth/login/page")

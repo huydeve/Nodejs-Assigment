@@ -58,21 +58,21 @@ class NationsController {
 
   async httpCreateNation(req: Request, res: Response, next: NextFunction) {
     try {
-      const { description, name, image } = req.body as INation;
+      const { description, name } = req.body as INation;
       let imageUrl: string = '';
       const nationsDao = new NationsDAO();
       if (req.file)
         imageUrl = await uploadImage(req.file)
       await nationsDao.insertNation({ name, description, image: imageUrl });
-      return res.redirect("/admin/nations");
     } catch (error) {
       if (error instanceof Error) {
+        console.log(error);
+
         req.flash('error', error.message);
       }
-
     }
     finally {
-      return res.redirect("/admin/players");
+      return res.redirect("/admin/nations");
 
     }
   }
