@@ -21,6 +21,40 @@
             </div>
 
         </div>
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Sort</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <select id="sortBy" style="width: 100%;">
+                        <option class="default" value="">
+                            None
+                        </option>
+                        <option value="name">
+                            Name
+                        </option>
+                        <option value="email">
+                            Email
+                        </option>
+                        <option value="yob">
+                            Birth day </option>
+                    </select>
+                    <br>
+                    <input type="radio" name="sortType" value="1" id="red-radio">
+                    <label for="red-radio">ASC</label>
+                    <br>
+                    <input type="radio" name="sortType" value="-1" id="green-radio">
+                    <label for="green-radio">DES</label>
+                    <br>
+                    <input class="default" type="radio" name="sortType" value="" checked id="blue-radio">
+                    <label for="blue-radio">None</label>
+                </div>
+            </div>
+
+        </div>
         <button id="reset" class="button">
             Reset
         </button>
@@ -44,7 +78,9 @@
 
 
     $(document).ready(function () {
-        $('input[type=radio]').change(function () {
+        let sortBy = undefined
+        let sortType = undefined
+        $('input[type=radio], input[name="sortType"], #sortBy').change(function () {
             filter();
         });
 
@@ -53,15 +89,17 @@
             $('#range-left').val('0')
             $('#range-right').val('120')
             $('#slider').slider('values', [$('#range-left').val(), $('#range-right').val()]);
-
+            $('#sortBy').val("")
             $('#default').prop('checked', true);
             isAdmin = undefined;
             ageRange = undefined;
+            sortBy = undefined;
+            sortType = undefined;
             q = undefined;
             $.ajax({
                 url: '<%= url %>',
                 type: 'GET',
-                data: { isAdmin, ageRange, limit, page: 1, q },
+                data: { isAdmin, ageRange, limit, page: 1, q, sortBy, sortType },
                 success: function (result) {
                     $('#myTable #tableBody').html(result);
                     setupModal();
@@ -82,10 +120,19 @@
             } else {
                 isAdmin = false
             }
+
+            sortBy = $('#sortBy').val();
+            sortType = $('input[name="sortType"]:checked').val()
+            if (sortType == "") {
+                sortType = undefined
+
+            } else if (sortBy == "") {
+                sortBy = undefined
+            }
             $.ajax({
                 url: '<%= url %>',
                 type: 'GET',
-                data: { isAdmin, ageRange, limit, page: 1, q },
+                data: { isAdmin, ageRange, limit, page: 1, q, sortBy, sortType },
                 success: function (result) {
                     $('#myTable #tableBody').html(result);
                     setupModal();

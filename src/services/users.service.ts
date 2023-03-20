@@ -16,7 +16,7 @@ class UsersService {
       page: query.page,
     });
 
-
+    const sortObject: any = {}
     const mongoQuery: any = {
       email: { $not: { $regex: userEmail, $options: 'i' } },
       $or: [
@@ -25,6 +25,9 @@ class UsersService {
       ],
     };
     console.log(query.isAdmin);
+    if (query.sortType && query.sortBy) {
+      sortObject[`${query.sortBy}`] = Number(query.sortType)
+    }
 
     if (typeof query.isAdmin !== 'undefined') {
       mongoQuery.isAdmin = query.isAdmin
@@ -45,7 +48,7 @@ class UsersService {
 
     }
 
-    const { count, models } = await queryModel(Users, mongoQuery, skip, limit)
+    const { count, models } = await queryModel(Users, mongoQuery, skip, limit, sortObject)
 
     return {
       users: models, ...getPaginationDetails(count, limit, page)

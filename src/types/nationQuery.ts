@@ -6,6 +6,8 @@ export interface Query {
   page?: number;
   limit?: number;
   q?: string;
+  sortBy?: string;
+  sortType?: string;
 }
 
 

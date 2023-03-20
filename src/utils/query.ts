@@ -3,7 +3,7 @@ import { Query } from "../types/nationQuery";
 
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_LIMIT = 5;
-const DEFAULT_LIMITS = [5, 10, 15]
+const DEFAULT_LIMITS = [5, 10, 15, 300]
 function getPagination(query: Query) {
 
 
@@ -35,8 +35,11 @@ export function getPaginationDetails(count: number, limit: number, page: number)
 
 
 
-async function queryModel<T>(model: Model<T>, mongoQuery: any, skip: number, limit: number, populate?: any, populateOptions?: any) {
+async function queryModel<T>(model: Model<T>, mongoQuery: any, skip: number, limit: number, sortObject: any = {}, populate?: any,
+  populateOptions?: any) {
   if (!DEFAULT_LIMITS.includes(limit)) limit = 5
+
+  console.log(sortObject);
 
   function myModel() {
     return {
@@ -46,20 +49,20 @@ async function queryModel<T>(model: Model<T>, mongoQuery: any, skip: number, lim
   }
 
 
-
   let models: T[] = [];
   let count = 0
   if (populate && populateOptions) {
-    count = await myModel().countQuery.populate(populate)
-    models = await myModel().modelQuery.populate(populate)
+    count = await myModel().countQuery.populate(populate).sort(sortObject)
+    models = await myModel().modelQuery.populate(populate).sort(sortObject)
     if (models.length == 0) {
 
-      count = await myModel().countQuery.populate(populateOptions)
-      models = await myModel().modelQuery.populate(populateOptions)
+      count = await myModel().countQuery.populate(populateOptions).sort(sortObject)
+      models = await myModel().modelQuery.populate(populateOptions).sort(sortObject)
     }
+
   } else {
-    count = await myModel().countQuery
-    models = await myModel().modelQuery
+    count = await myModel().countQuery.sort(sortObject)
+    models = await myModel().modelQuery.sort(sortObject)
   }
 
 

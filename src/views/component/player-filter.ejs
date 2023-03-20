@@ -29,7 +29,7 @@
                 </button>
             </div>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content">
+                <div class="dropdown-content" style="overflow-y: scroll; max-height: 300px;">
                     <% nations.forEach(nation=> { %>
                         <label><input type="checkbox" name="nation[]" value="<%=nation._id%>" id="yellow" />
                             <%=nation.name %>
@@ -76,13 +76,58 @@
                     <input type="radio" name="isCaptain" value="off" id="green-radio">
                     <label for="green-radio">No</label>
                     <br>
-                    <input id="default" type="radio" name="isCaptain" value="" checked id="blue-radio">
+                    <input class="default" type="radio" name="isCaptain" value="" checked id="blue-radio">
                     <label for="blue-radio">Both</label>
                     <br>
                 </div>
             </div>
 
         </div>
+
+
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Sort</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <select id="sortBy" style="width: 100%;">
+                        <option class="default" value="">
+                            None
+                        </option>
+                        <option value="name">
+                            Name
+                        </option>
+                        <option value="club">
+                            Club
+                        </option>
+                        <option value="position">
+                            Position </option>
+                        <option value="goals">
+                            Goals </option>
+                        <option value="career">
+                            Career
+                        </option>
+                        <option value="nation">
+                            Nation
+                        </option>
+                    </select>
+                    <br>
+                    <input type="radio" name="sortType" value="1" id="red-radio">
+                    <label for="red-radio">ASC</label>
+                    <br>
+                    <input type="radio" name="sortType" value="-1" id="green-radio">
+                    <label for="green-radio">DES</label>
+                    <br>
+                    <input class="default" type="radio" name="sortType" value="" checked id="blue-radio">
+                    <label for="blue-radio">None</label>
+                </div>
+            </div>
+
+        </div>
+
         <div class="dropdown">
             <button id="reset" class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu4">
                 <span>Reset</span>
@@ -111,7 +156,9 @@
 
 
     $(document).ready(function () {
-        $('input[type=checkbox], input[type=radio]').change(function () {
+        let sortBy = undefined
+        let sortType = undefined
+        $('input[type=checkbox], input[type=radio], #sortBy').change(function () {
             filter();
         });
 
@@ -124,17 +171,21 @@
             $('#range-right').val('1000')
             $('#slider').slider('values', [$('#range-left').val(), $('#range-right').val()]);
 
-            $('#default').prop('checked', true);
+            $('.default').prop('checked', true);
+            $('#sortBy').val("")
+
             isCaptain = undefined;
             positions = undefined;
             clubs = undefined;
             nations = undefined;
             goalsRange = undefined;
             q = undefined;
+            sortBy = undefined;
+            sortType = undefined;
             $.ajax({
                 url: '<%= URL %>',
                 type: 'GET',
-                data: { isCaptain, positions, clubs, nations, limit, page: 1, q, goalsRange },
+                data: { isCaptain, positions, clubs, nations, limit, page: 1, q, goalsRange, sortBy, sortType },
                 success: function (result) {
                     $('#myTable #tableBody').html(result);
                     setupModal();
@@ -158,6 +209,17 @@
                 return $(this).val();
             }).get();
 
+            sortBy = $('#sortBy').val();
+            sortType = $('input[name="sortType"]:checked').val()
+
+            if (sortType == "") {
+                sortType = undefined
+
+            } else if (sortBy == "") {
+                sortBy = undefined
+            }
+
+
             isCaptain = $('input[name="isCaptain"]:checked').val()
             if (isCaptain == "") {
                 isCaptain = undefined
@@ -165,7 +227,7 @@
             $.ajax({
                 url: '<%= URL %>',
                 type: 'GET',
-                data: { isCaptain, positions, clubs, nations, limit, page: 1, q },
+                data: { isCaptain, positions, clubs, nations, limit, page: 1, q, sortType, sortBy },
                 success: function (result) {
                     $('#myTable #tableBody').html(result);
                     setupModal();

@@ -111,15 +111,11 @@ class="range-slider-input">
 
         $('#range-right').on('input', function () {
             slider.slider('values', [$('#range-left').val(), $('#range-right').val()]);
+            filter($('#range-left').val(), $('#range-right').val())
+
         });
 
-        $('#range-right').change(() => {
-            var leftValue = parseInt($('#range-left').val());
-            var rightValue = parseInt($('#range-right').val());
-            slider.slider('values', [leftValue, rightValue]);
-            filter()
 
-        })
 
         var slider = $('#slider').slider({
             range: true,

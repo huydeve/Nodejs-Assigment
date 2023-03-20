@@ -20,19 +20,31 @@ class PlayersService {
 
   async getAllPlayers(query: PlayerQuery) {
 
-    console.log(query);
-
+    const sortObject: any = {}
     const { skip, limit, page } = getPagination({
       limit: query.limit,
       page: query.page,
     });
     const mongoQuery: any = {
-      $or: [
-        { name: { $regex: query.q || '', $options: 'i' } },
-        { club: { $regex: query.q || '', $options: 'i' } },
-        { position: { $regex: query.q || '', $options: 'i' } },
-      ],
+
     };
+
+    if (query.q) {
+      mongoQuery.$or = [
+        { name: { $regex: query.q, $options: 'i' } },
+        { club: { $regex: query.q, $options: 'i' } },
+        { position: { $regex: query.q, $options: 'i' } },
+        { career: { $regex: query.q, $options: 'i' } },
+      ]
+      if (Number(query.q)) {
+        mongoQuery.$or[mongoQuery.$or.length - 1] = { goals: Number(query.q) }
+
+      }
+    }
+
+    if (query.sortType && query.sortBy) {
+      sortObject[`${query.sortBy}`] = Number(query.sortType)
+    }
 
     if (typeof query.goalsRange !== 'undefined' && query.goalsRange.length >= 2) {
       mongoQuery.goals = { $gte: Number(query.goalsRange[0]), $lte: query.goalsRange[1] }
@@ -51,13 +63,10 @@ class PlayersService {
     if (typeof query.isCaptain !== 'undefined') mongoQuery.isCaptain = query.isCaptain;
 
 
-
-    const data = await queryModel<IPlayer>(Players, mongoQuery, skip, limit, 'nation', {
+    const data = await queryModel<IPlayer>(Players, mongoQuery, skip, limit, sortObject, 'nation', {
       path: 'nation',
       match: { name: { $regex: query.q || '', $options: 'i' } },
     })
-
-
 
     return {
       players: data.models,

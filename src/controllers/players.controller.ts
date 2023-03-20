@@ -39,7 +39,7 @@ class PlayersController {
       const query = req.query as unknown as Query;
       const q = req.query.q as string;
 
-      const data = await playersDao.getAllPlayers({ ...query, isCaptain: true });
+      const data = await playersDao.getAllPlayers({ ...query });
       const nationData = await new NationsService().getAllNations({ limit: 300 });
 
       console.log(data.limit);
@@ -83,7 +83,7 @@ class PlayersController {
     try {
       const query = req.query as unknown as PlayerQuery;
       const isCaptain = req.query.isCaptain
-      
+
       if (typeof query.isCaptain !== "undefined") {
         query.isCaptain = isCaptain === "on"
       }

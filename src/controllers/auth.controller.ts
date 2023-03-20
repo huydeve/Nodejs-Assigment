@@ -80,8 +80,8 @@ class AuthController {
 
       if (oldPassword === newPassword) {
         throw new Error(`Pls Enter New Password different with Old Password!`)
-
       }
+
       if (newPassword !== confirmPassword) {
         throw new Error(`New Password and Confirm Password not match!`)
 
@@ -230,6 +230,8 @@ class AuthController {
           secretKey = secretToken(decoded.strategy, otp)
 
       } else if (decoded.strategy.includes('+')) {
+        console.log(decoded.strategy);
+        
         const checkOtp = await checkOtpPhone(otp, decoded.strategy)
         if (!(checkOtp.status === 'approved'))
           throw new Error('Invalid OTP')
@@ -277,7 +279,7 @@ class AuthController {
         await userService.updateUserPasswordByOr(decoded.strategy, newPassword)
 
       await delResponse(decoded.strategy)
-      return res.redirect('/auth/login/page')
+      return res.clearCookie("token").redirect('/auth/login/page')
 
     } catch (error) {
       if (error instanceof Error) {
