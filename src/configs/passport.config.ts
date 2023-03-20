@@ -74,6 +74,7 @@ passportConfig.use(
       try {
         const email = profile.emails && profile.emails[0].value;
 
+
         if (!email) {
           return done(null, false, { message: 'Email not found in Google profile' });
         }
@@ -87,7 +88,6 @@ passportConfig.use(
             email,
             password: '',
             isAdmin: false,
-
           });
         }
 

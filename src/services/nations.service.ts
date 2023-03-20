@@ -14,7 +14,7 @@ class NationsService {
 
     const mongoQuery = {
       $or: [
-        { name: { $regex: query.searchValue || '', $options: 'i' } },
+        { name: { $regex: query.q || '', $options: 'i' } },
       ],
     };
 

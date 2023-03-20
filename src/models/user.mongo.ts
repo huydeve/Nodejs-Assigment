@@ -5,7 +5,8 @@ export interface IUser extends Document {
   password: string;
   name: string;
   email: string;
-  yob: string;
+  yob: Date;
+  phone: string;
   isAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -21,10 +22,16 @@ const usersSchema = new Schema(
       require: true,
     },
     yob: {
-      type: String,
+      type: Date,
       require: true,
     },
     email: {
+      type: String,
+      require: false,
+      unique: true,
+      default: ''
+    },
+    phone: {
       type: String,
       require: false,
       unique: true,

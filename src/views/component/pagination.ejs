@@ -3,7 +3,7 @@
         <ul class="pagination-list">
             <% if (currentPage> 1) { %>
                 <li>
-                    <a class="pagination-link" href="<%=url%>?page=<%= currentPage - 1 %>&limit=<%=limit%>">
+                    <a class="pagination-link" href="#" data-page="<%= currentPage - 1 %>">
                         Previous
                     </a>
                 </li>
@@ -17,7 +17,7 @@
                             </li>
                             <% } else { %>
                                 <li>
-                                    <a class="pagination-link" href="<%=url%>?page=<%= i %>&limit=<%=limit%>">
+                                    <a class="pagination-link" href="#" data-page="<%= i %>">
                                         <%= i %>
                                     </a>
                                 </li>
@@ -25,8 +25,7 @@
                                     <% } %>
                                         <% if (currentPage < totalPage) { %>
                                             <li>
-                                                <a class="pagination-link"
-                                                    href="<%=url%>?page=<%= currentPage + 1 %>&limit=<%=limit%>">
+                                                <a class="pagination-link" href="#" data-page="<%= currentPage + 1 %>">
                                                     Next
                                                 </a>
                                             </li>
@@ -40,3 +39,27 @@
                     <% } %>
                         <% } %>
 </nav>
+<script>
+    $(document).ready(function () {
+        // Add click event listener to pagination links
+        $('.pagination-link').on('click', function (e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            
+            $.ajax({
+                url: '<%= url %>',
+                type: 'GET',
+                data: { page, limit, q },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+
+                    // Update current page
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        });
+    });
+</script>

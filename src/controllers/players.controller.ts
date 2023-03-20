@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { getPagination } from "../utils/query";
-import { Query } from "../types/nationQuery";
+import { PlayerQuery, Query } from "../types/nationQuery";
 import PlayersDAO from "../services/players.service";
 import NationsDAO from "../services/nations.service";
 import { IPlayer } from "../models/players.mongo";
 import { uploadImage } from "../configs/firebase.config";
+import NationsService from "../services/nations.service";
 
 var positions = [
   "Goalkeeper",
@@ -36,23 +37,22 @@ class PlayersController {
     const playersDao = new PlayersDAO();
     try {
       const query = req.query as unknown as Query;
-      const searchValue = req.query.searchValue as string;
+      const q = req.query.q as string;
 
       const data = await playersDao.getAllPlayers({ ...query, isCaptain: true });
-      console.log(data);
+      const nationData = await new NationsService().getAllNations({ limit: 300 });
+
+      console.log(data.limit);
+
 
       return res.render("player", {
         title: "Player",
-        searchValue,
-        players: data.players,
-        totalPage: data.totalPage,
-        currentPage: data.currentPage,
-        ellipsisEnd: data.ellipsisEnd,
-        ellipsisStart: data.ellipsisStart,
-        end: data.end,
-        start: data.start,
-        limit: data.limit,
-
+        q,
+        positions,
+        clubs,
+        maxValue: 1000,
+        nations: nationData.nations,
+        ...data,
       });
     } catch (error) {
       return res.send("error");
@@ -81,10 +81,26 @@ class PlayersController {
   async httpGetAllPlayers(req: Request, res: Response, next: NextFunction) {
     const playersDao = new PlayersDAO();
     try {
-      const query = req.query as unknown as Query;
-      const players = await playersDao.getAllPlayers(query);
+      const query = req.query as unknown as PlayerQuery;
+      const isCaptain = req.query.isCaptain
+      
+      if (typeof query.isCaptain !== "undefined") {
+        query.isCaptain = isCaptain === "on"
+      }
+      const data = await playersDao.getAllPlayers(query);
+      const nationData = await new NationsService().getAllNations({ limit: 300 });
+      const URL = req.originalUrl.split("/filter?")[0]
 
-      res.send(players);
+      return res.render("component/player-row.ejs", {
+        q: query.q,
+        positions,
+        clubs,
+        maxValue: 1000,
+        nations: nationData.nations,
+        errorMessage: req.flash('error'),
+        ...data,
+        URL
+      });
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
     }

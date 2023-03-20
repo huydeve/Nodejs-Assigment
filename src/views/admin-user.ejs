@@ -7,67 +7,38 @@
 
 <body>
     <%- include('./ui/navbar.ejs') %>
-        <div class="page-title-nation">
+        <%const URL="/admin/users/filter" %>
+
+            <div class="page-title-nation">
+                <div>
+                    <h1>User</h1>
+                    <%- include('./component/search-form.ejs',{url:URL , q}) %>
+
+
+                </div>
+            </div>
             <div>
-                <h1>User</h1>
-                <form action="/admin/users" method="get">
-
-                    <div class="field has-addons">
-                        <div class="control">
-                            <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"
-                                type="text" placeholder="Find a repository">
-                        </div>
-                        <div class="control">
-                            <button type="submit" class="button is-dark">
-                                Search
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
+                <%- include('./component/user-filter.ejs',{url:URL , q, isUser:"true" }) %>
 
             </div>
-        </div>
-        <div>
-            <%- include('./component/limit-row.ejs',{url:"/admin/users", page:currentPage}) %>
 
-        </div>
-        <table class="table" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Pos</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Birth day</th>
-                    <th>Is Admin</th>
-
-                </tr>
-            </thead>
-
-            <tbody>
-                <% users.forEach((user,index)=> { %>
+            <table class="table" id="myTable" style="width: 100%">
+                <thead>
                     <tr>
-                        <td>
-                            <%= index %>
-                        </td>
-                        <td>
-                            <%= user.name %>
-                        </td>
-                        <td>
-                            <%= user.email %>
-                        </td>
-                        <td>
-                            <%= user.yob %>
-                        </td>
-                        <td>
-                            <%= user.isAdmin %>
-                        </td>
+                        <th>Pos</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Birth day</th>
+                        <th>Is Admin</th>
 
                     </tr>
-                    <% }) %>
-            </tbody>
-        </table>
-        <%- include('./component/pagination.ejs',{url:"/admin/users"}) %>
+                </thead>
+
+                <tbody id="tableBody">
+                    <%- include('./component/user-row.ejs',{users, URL}) %>
+
+                </tbody>
+            </table>
 </body>
 
 </html>

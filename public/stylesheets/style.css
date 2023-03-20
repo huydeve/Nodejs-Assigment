@@ -216,3 +216,9 @@ padding-top: 56px;}
   background: transparent;
   width: 100%;
 }
+
+
+
+.dropdown-content {
+  padding: 16px;
+}

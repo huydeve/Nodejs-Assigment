@@ -14,7 +14,7 @@ playersRouter.get("/page", playersController.httpPlayerPage);
 playersRouter.get("/page/:id", playersController.httpPlayerDetailPage);
 
 
-playersRouter.get("/", playersController.httpGetAllPlayers);
+playersRouter.get("/filter", playersController.httpGetAllPlayers);
 
 playersRouter.get("/:id", playersController.httpGetPlayer);
 

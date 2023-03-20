@@ -19,7 +19,7 @@
             <div class="is-fullwidth" style="margin: 16px;">
 
                 <div class="notification is-danger">
-                        <%= errorMessage %>
+                    <%= errorMessage %>
 
                 </div>
             </div>
@@ -61,6 +61,12 @@
                                             value="<%= session.user.profile.yob %>" />
 
                                     </article>
+                                    <article class="tile is-child notification is-info">
+                                        <p class="subtitle">Your Phone</p>
+                                        <input class="title" name="phone" type="text"
+                                            value="<%= session.user.profile.phone %>" />
+
+                                    </article>
                                 </div>
 
                             </div>
@@ -87,7 +93,9 @@
                         <div class="tile is-parent is-vertical">
 
                             <article class="tile is-child notification is-info">
+                                <div id="error">
 
+                                </div>
                                 <% if (havePassword) { %>
                                     <p class="subtitle">Old password</p>
                                     <input class="title" name="oldPassword" type="password"
@@ -95,10 +103,13 @@
 
                                     <% } %>
 
-
                                         <p class="subtitle">New password</p>
-                                        <input class="title" name="newPassword" type="password"
+                                        <input id="new-password" class="title" name="newPassword" type="password"
                                             placeholder="Enter new password" />
+                                        <p class="subtitle">Confirm Password</p>
+                                        <input id="confirm-password" class="title" name="confirmPassword"
+                                            type="password" placeholder="Enter confirm password" />
+
                             </article>
                         </div>
 
@@ -107,5 +118,8 @@
 
 </body>
 
+<script>
+
+</script>
 
 </html>

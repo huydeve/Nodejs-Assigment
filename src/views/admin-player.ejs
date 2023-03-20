@@ -7,103 +7,45 @@
 
 <body>
     <%- include('./ui/navbar.ejs') %>
-        <div class="page-title-nation">
-            <div>
-                <h1>Player</h1>
+        <% const URL="/admin/players" %>
 
-                <form action="/admin/players" method="get">
+            <div class="page-title-nation">
+                <div>
+                    <h1>Player</h1>
 
-                    <div class="field has-addons">
-                        <div class="control">
-                            <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"
-                                type="text" placeholder="Find a repository">
-                        </div>
-                        <div class="control">
-                            <button type="submit" class="button is-dark">
-                                Search
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                    <%- include('./component/search-form.ejs',{url:URL + "/filter" , q}) %>
 
+
+                </div>
             </div>
-        </div>
-        <div>
-            <%- include('./component/limit-row.ejs',{url:"/admin/players", page:currentPage}) %>
+            <%- include('./component/player-filter.ejs',{URL:URL + "/filter"  ,q}) %>
 
-        </div>
 
-        <table class="table" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Pos</th>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Club</th>
-                    <th>Position</th>
-                    <th>Goals</th>
-                    <th>Career</th>
-                    <th>Is Captain</th>
-                    <th>Nation</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                <% players.forEach((player,index)=> { %>
-                    <tr>
-                        <td>
-                            <%= index %>
-                        </td>
-                        <td>
-                            <figure class="image " style="width: 100px;
-                            height: 100px">
-                                <img class="" src="<%= player.image%>" />
-                            </figure>
-                        </td>
-                        <td>
-                            <%= player.name %>
-                        </td>
-                        <td>
-                            <%= player.club %>
-                        </td>
-                        <td>
-                            <%= player.position %>
-                        </td>
-                        <td>
-                            <%= player.goals %>
-                        </td>
-                        <td>
-                            <%= player.career %>
-                        </td>
-                        <td>
-                            <%= player.isCaptain %>
-                        </td>
-                        <td>
-                            <%= player.nation.name %>
-                        </td>
-                        <td>
-                            <div class="flex-veritcal" style="display: flex; gap: 16px;">
-                                <form action="/admin/players/<%= player._id %>" method="post"
-                                    onsubmit="return validate(this);">
-                                    <input type="hidden" name="_method" value="delete" />
-                                    <input required class="button is-danger" type="submit" value="Delete" />
-                                </form>
-                                <!-- update -->
-                                <div>
-                                    <%- include('./component/player-button.ejs', {player, titleButton: "Update" }) %>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <% }) %>
-            </tbody>
-        </table>
+                <table class="table" id="myTable" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Club</th>
+                            <th>Position</th>
+                            <th>Goals</th>
+                            <th>Career</th>
+                            <th>Is Captain</th>
+                            <th>Nation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-        <%- include('./component/pagination.ejs',{url:"/admin/players"}) %>
-            </div>
+                    <tbody id="tableBody"> <%- include('./component/player-row.ejs',{players, URL,isAdmin:true}) %>
+                    </tbody>
 
-            <%- include('./component/player-button.ejs', {absolute: true}) %>
+                </table>
+
+                </div>
+
+                <%- include('./component/player-button.ejs', {absolute: true, URL}) %>
 </body>
 
 </html>

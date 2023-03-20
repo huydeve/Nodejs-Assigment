@@ -1,0 +1,101 @@
+<div style="display: flex; justify-content: space-between; margin: 16px;">
+    <div>
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Is Admin</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <input type="radio" name="isAdmin" value="on">
+                    <label for="red-radio">Yes</label>
+                    <br>
+                    <input type="radio" name="isAdmin" value="off">
+                    <label for="green-radio">No</label>
+                    <br>
+                    <input id="default" type="radio" name="isAdmin" value="" checked>
+                    <label for="blue-radio">Both</label>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+        <button id="reset" class="button">
+            Reset
+        </button>
+    </div>
+    <div style=" width: 400px; display: flex; justify-content: center; align-items: center;">
+        <p>Age</p>
+        <%- include('./range-slider.ejs',{ maxValue:120, maxDefault: 50, URL: url}) %>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdown = document.querySelector('.dropdown');
+        dropdown.addEventListener('click', function (event) {
+            event.stopPropagation();
+            dropdown.classList.toggle('is-active');
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $('input[type=radio]').change(function () {
+            filter();
+        });
+
+        $('#reset').click(() => {
+            $('#searchInput').val('')
+            $('#range-left').val('0')
+            $('#range-right').val('120')
+            $('#slider').slider('values', [$('#range-left').val(), $('#range-right').val()]);
+
+            $('#default').prop('checked', true);
+            isAdmin = undefined;
+            ageRange = undefined;
+            q = undefined;
+            $.ajax({
+                url: '<%= url %>',
+                type: 'GET',
+                data: { isAdmin, ageRange, limit, page: 1, q },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        })
+
+        function filter() {
+            // Get all checked values
+            isAdmin = $('input[name="isAdmin"]:checked').val()
+            if (isAdmin == "") {
+                isAdmin = undefined
+            } else if (isAdmin == "on") {
+                isAdmin = true
+            } else {
+                isAdmin = false
+            }
+            $.ajax({
+                url: '<%= url %>',
+                type: 'GET',
+                data: { isAdmin, ageRange, limit, page: 1, q },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+
+        }
+
+    });
+</script>

@@ -1,48 +1,38 @@
 import express from "express";
 import { upload } from "../configs/firebase.config";
-import { checkLoggedIn } from "../middleware/auth.middleware";
+import { checkIsAdmin, checkLoggedIn } from "../middleware/auth.middleware";
 import AdminController from "./admin.controller";
 import NationsController from "./nations.controller";
 import PlayersController from "./players.controller";
+import { convertMethod } from "../middleware/method.middleware";
+import UsersController from "./users.controller";
 const adminRouter = express.Router();
 const adminController = new AdminController();
 const nationController = new NationsController();
 const playerController = new PlayersController();
+const userController = new UsersController();
+
 adminRouter.use(checkLoggedIn);
-adminRouter.use((req, res, next) => {
-    const { isAdmin } = req.session.passport.user.profile
-    if (!isAdmin) return res.redirect("/");
-    next()
-});
+adminRouter.use(checkIsAdmin);
 
 
-adminRouter.get("/dashboard", adminController.httpDashBoard);
-adminRouter.get("/players", adminController.httpPlayers);
-adminRouter.get("/users", adminController.httpUsers);
-adminRouter.get("/nations", adminController.httpNations);
+adminRouter.get("/dashboard/", adminController.httpDashBoard);
+adminRouter.get("/players/", adminController.httpPlayers);
+adminRouter.get("/users/", adminController.httpUsers);
+adminRouter.get("/nations/", adminController.httpNations);
+
+
+
+adminRouter.get("/nations/filter", nationController.httpGetAllNations);
+adminRouter.get("/players/filter", playerController.httpGetAllPlayers);
+adminRouter.get("/users/filter", userController.httpGetAllUsers);
+
 
 adminRouter.delete("/nations/:id", nationController.httpRemoveNation);
-
-
 adminRouter.delete("/players/:id", playerController.httpRemovePlayer);
-adminRouter.use(upload.single('image'), (req, res, next) => {
-
-    if (req.body)
-        switch (req.body._method) {
-            case "delete":
-                req.method = "DELETE";
-                break;
-            case "put":
-                req.method = "PUT";
-                break;
-            default:
-                req.method = req.method;
-                break;
-        }
-    req.url = req.path;
-    next();
-});
+adminRouter.use(upload.single('image'), convertMethod);
 adminRouter.put("/players", playerController.httpUpdatePlayer);
+
 adminRouter.post("/players", (req, res, next) => {
 
     if (!req.body.nation) {

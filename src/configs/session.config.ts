@@ -16,5 +16,11 @@ declare module 'express-session' {
         user?: any;
         passport?: any;
         myData: MySessionData;
+        resetPassword: {
+            verifyOtp: boolean;
+            strategyValue: string;
+        },
+        isVerify: boolean;
+        tokenVerify: string
     }
 }

@@ -9,7 +9,7 @@ const nationRouter = express.Router();
 nationRouter.use(checkNotAdmin);
 nationRouter.get("/page", nationsController.httpNationPage);
 
-nationRouter.get("/", nationsController.httpGetAllNations);
+nationRouter.get("/filter", nationsController.httpGetAllNations);
 
 nationRouter.get("/:id", nationsController.httpGetNation);
 

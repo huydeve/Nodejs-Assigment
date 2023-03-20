@@ -14,11 +14,17 @@ import session from 'express-session';
 import { sessionStorage } from './middleware/session.middleware';
 import adminRouter from './controllers/admin.route';
 import flash from 'connect-flash';
+import { convertMethod } from './middleware/method.middleware';
 
 // var nationsRouter = require("./routes/nations.route");
 // var playersRouter = require("./routes/players.route");
 
 var app = express();
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+
+// These id's and secrets should come from .env file.
+
 
 
 
@@ -58,39 +64,15 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.use((req, res, next) => {
+app.use(convertMethod);
 
-  if (req.body)
-    switch (req.body._method) {
-      case "delete":
-        req.method = "DELETE";
-        break;
-      case "put":
-        req.method = "PUT";
-        break;
-      default:
-        req.method = req.method;
-        break;
-    }
-  req.url = req.path;
-  next();
-});
-
-app.get('/test', (req, res) => {
-  const errorMessage = req.flash('error');
-  res.render('err', { errorMessage });
-})
-
-app.get('/test-t', (req, res) => {
-  req.flash('error', 'Error creating post: ');
-  res.redirect('/test');
-})
 
 app.use("/", indexRouter);
 app.use("/nations", nationRouter);
 app.use("/auth", authRouter);
 app.use("/players", playersRouter);
 app.use("/admin", adminRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
@@ -107,5 +89,6 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
   res.status(err.status || 500);
   res.render("error", { message: res.locals.message });
 });
+
 
 export default app;

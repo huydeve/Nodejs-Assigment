@@ -1,35 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import NationsDAO from "../services/nations.service";
 import { getPagination } from "../utils/query";
-import { NationQuery, Query } from "../types/nationQuery";
+import { NationQuery, Query, UserQuery } from "../types/nationQuery";
 import { INation } from "../models/nations.mongo";
 import NationsService from "../services/nations.service";
 import PlayersService from "../services/players.service";
 import UsersService from "../services/users.service";
-var positions = [
-    "Goalkeeper",
-    "Right Back",
-    "Center Back",
-    "Left Back",
-    "Defensive Midfielder",
-    "Central Midfielder",
-    "Attacking Midfielder",
-    "Right Winger",
-    "Left Winger",
-    "Striker",
-];
-var clubs = [
-    "Manchester United",
-    "Barcelona",
-    "Real Madrid",
-    "Bayern Munich",
-    "Paris Saint-Germain",
-    "Chelsea",
-    "Liverpool",
-    "Juventus",
-    "Manchester City",
-    "Arsenal",
-];
+import { clubs, positions } from "../utils/dataFake";
+
 class AdminController {
     async httpDashBoard(req: Request, res: Response) {
 
@@ -46,24 +24,16 @@ class AdminController {
         try {
 
             const query = req.query as unknown as Query;
-            const searchValue = req.query.searchValue as string;
+            const q = req.query.q as string;
 
 
 
             const dataPlayers = await new PlayersService().getAllPlayers(query);
             const dataNations = await new NationsService().getAllNations({ limit: 300 });
-
             return res.render("admin-player", {
                 title: "Player",
-                players: dataPlayers.players,
-                totalPage: dataPlayers.totalPage,
-                currentPage: dataPlayers.currentPage,
-                ellipsisEnd: dataPlayers.ellipsisEnd,
-                ellipsisStart: dataPlayers.ellipsisStart,
-                end: dataPlayers.end,
-                start: dataPlayers.start,
-                limit: dataPlayers.limit,
-                searchValue,
+                ...dataPlayers,
+                q,
                 positions,
                 clubs,
                 nations: dataNations.nations,
@@ -78,22 +48,15 @@ class AdminController {
         try {
 
             const query = req.query as unknown as NationQuery;
-            const searchValue = req.query.seachValue as string;
+            const q = req.query.q as string;
 
 
             const data = await new NationsService().getAllNations(query);
 
             return res.render("admin-nation", {
                 title: "Nation",
-                nations: data.nations,
-                totalPage: data.totalPage,
-                currentPage: data.currentPage,
-                ellipsisEnd: data.ellipsisEnd,
-                ellipsisStart: data.ellipsisStart,
-                end: data.end,
-                start: data.start,
-                searchValue,
-                limit: data.limit,
+                ...data,
+                q,
                 errorMessage: req.flash('error')
 
             });
@@ -102,12 +65,11 @@ class AdminController {
         }
     }
 
-
     async httpUsers(req: Request, res: Response, next: NextFunction) {
         try {
 
-            const query = req.query as unknown as Query;
-            const searchValue = req.query.searchValue as string;
+            const query = req.query as unknown as UserQuery;
+            const q = req.query.q as string;
             const user = req.session.passport.user.profile.email
             // const { skip, limit } = getPagination(query);
 
@@ -121,9 +83,11 @@ class AdminController {
                 currentPage: data.currentPage,
                 ellipsisEnd: data.ellipsisEnd,
                 ellipsisStart: data.ellipsisStart,
+                maxValue: 120,
+                maxDefault: 50,
                 end: data.end,
                 start: data.start,
-                searchValue,
+                q,
                 limit: data.limit,
                 errorMessage: req.flash('error')
 

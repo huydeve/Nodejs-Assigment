@@ -2,6 +2,7 @@ import express from "express";
 import AuthController from "./auth.controller";
 import passportConfig from "../configs/passport.config";
 import { checkLoggedIn } from "../middleware/auth.middleware";
+import { delAllResponse } from "../services/redis.service";
 const authRouter = express.Router();
 const authController = new AuthController();
 authRouter.use((req, res, next) => {
@@ -10,6 +11,18 @@ authRouter.use((req, res, next) => {
 });
 
 
+
+
+
+authRouter.get('/forgot-password/page', authController.httpForgotPasswordPage);
+authRouter.get('/forgot-password/otp/page', authController.httpOTPPage);
+authRouter.get('/forgot-password/reset-password/page', authController.httpResetPasswordPage);
+
+authRouter.post('/forgot-password/send-otp', authController.httpSendOTP);
+
+authRouter.post('/forgot-password/verify-otp', authController.httpVerifyOtp);
+
+authRouter.post('/forgot-password/reset-password', authController.httpNewPassword);
 
 authRouter.get("/login/page", authController.httpLoginPage);
 authRouter.get("/registration/page", authController.httpRegistrationPage);
@@ -44,6 +57,9 @@ authRouter.get("/google/callback", passportConfig.authenticate('google', {
 
 
 
+
+
+
 authRouter.use(checkLoggedIn)
 
 authRouter.get('/profile/page', authController.httpProfilePage);
@@ -51,6 +67,11 @@ authRouter.get('/profile/page', authController.httpProfilePage);
 authRouter.put('/profile', authController.httpUpdateProfile);
 
 authRouter.put('/changePassword', authController.httpChangePassword);
+
+
+
+
+
 
 
 authRouter.get('/failure', (req, res) => {

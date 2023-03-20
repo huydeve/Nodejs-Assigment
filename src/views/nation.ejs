@@ -10,39 +10,22 @@
         <div class="page-title-nation">
             <div>
                 <h1>Nation</h1>
-                <form action="/nations/page?page=<%=currentPage%>&limit=<%=limit%>" method="get">
+                <%- include('./component/search-form.ejs',{url:"/nations/filter" , q}) %>
 
-                    <div class="field has-addons">
-                        <div class="control">
-                            <input class="input is-success" autofocus name="searchValue" value="<%=searchValue%>"
-                                type="text" placeholder="Find a repository">
-                        </div>
-                        <div class="control">
-                            <button type="submit" class="button is-dark">
-                                Search
-                            </button>
-                        </div>
-                    </div>
-                </form>
 
             </div>
 
         </div>
-        <div>
-            <%- include('./component/limit-row.ejs',{url:"/nations/page", page:currentPage}) %>
+      
 
-        </div>
-        <div>
-            <div class="container-nations">
+        <div id="myTable">
 
-                <% nations.forEach(nation=> { %>
-                    <%- include('./component/card-nation.ejs', { nation }) %>
-                        <% }) %>
+            <div id="tableBody">
+                <%- include('./component/nation-row.ejs', {nations, URL: "/nations/filter" }) %>
+
             </div>
+
         </div>
-        <%- include('./component/pagination.ejs',{url:"/nations/page"}) %>
-
-
 </body>
 
 

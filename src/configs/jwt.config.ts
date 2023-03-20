@@ -9,7 +9,10 @@ import { MySessionData } from './session.config';
 interface DecodedJwt {
   id: string;
 }
-
+interface DecodeTokenOTP {
+  otp: string;
+  strategy: string;
+}
 const generateToken = (user: IUser): string => {
   const payload = {
     id: user._id,
@@ -45,4 +48,19 @@ const verifyToken = (req: Request) => {
 
 };
 
-export { generateToken, verifyToken };
+
+const secretToken = (strategy: string, key: string) => {
+  return jwt.sign({ strategy, key }, ENV_CONFIG.JWT_SECRET!, { expiresIn: '3m' });
+}
+const verifySecretToken = (token: string) => {
+
+  try {
+    const decoded = jwt.verify(token, ENV_CONFIG.JWT_SECRET!) as DecodeTokenOTP;
+    return decoded;
+  } catch (err) {
+    if (err instanceof Error)
+      throw new Error(`Invalid JWT token: ${err.message}`);
+  }
+}
+
+export { generateToken, verifyToken, secretToken, verifySecretToken };

@@ -8,6 +8,7 @@ import app from "./app";
 import http from "http";
 import debug from "debug";
 import { mongoConnect } from "./configs/mongo.config";
+import client from "./services/redis.service";
 
 /**
  * Get port from environment and store in Express.
@@ -33,6 +34,7 @@ startServer();
 
 async function startServer() {
   await mongoConnect();
+  await client.connect()
   server.listen(port);
   server.on("error", onError);
   server.on("listening", onListening);

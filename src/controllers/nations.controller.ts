@@ -1,16 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import NationsDAO from "../services/nations.service";
 import { getPagination } from "../utils/query";
-import { Query } from "../types/nationQuery";
+import { NationQuery, Query } from "../types/nationQuery";
 import { INation } from "../models/nations.mongo";
 import { uploadImage } from "../configs/firebase.config";
+import path from "path";
+import NationsService from "../services/nations.service";
+import { clubs, positions } from "../utils/dataFake";
 
 class NationsController {
   async httpNationPage(req: Request, res: Response) {
     const nationsDao = new NationsDAO();
     try {
       const query = req.query as unknown as Query;
-      const searchValue = req.query.searchValue as string;
+      const q = req.query.q as string;
 
       // const { skip, limit } = getPagination(query);
 
@@ -18,7 +21,8 @@ class NationsController {
 
       return res.render("nation", {
         title: "Nation",
-        searchValue,
+        q,
+      
         nations: data.nations,
         totalPage: data.totalPage,
         currentPage: data.currentPage,
@@ -36,10 +40,17 @@ class NationsController {
   async httpGetAllNations(req: Request, res: Response, next: NextFunction) {
     const nationsDao = new NationsDAO();
     try {
-      const query = req.query as unknown as Query;
+      const query = req.query as unknown as NationQuery;
       const data = await nationsDao.getAllNations(query);
+      const q = req.query.q as string;
+      const URL = req.originalUrl.split("?")[0]
 
-      res.send(data.nations);
+      return res.render("component/nation-row.ejs", {
+        errorMessage: req.flash('error'),
+        q,
+        ...data,
+        URL
+      });
     } catch (error) {
       if (error instanceof Error) res.send(error.message);
     }
@@ -64,16 +75,11 @@ class NationsController {
       if (req.file)
         imageUrl = await uploadImage(req.file)
       await nationsDao.insertNation({ name, description, image: imageUrl });
+      return res.redirect("/admin/nations");
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error);
-
-        req.flash('error', error.message);
+        return res.send(error.message)
       }
-    }
-    finally {
-      return res.redirect("/admin/nations");
-
     }
   }
 

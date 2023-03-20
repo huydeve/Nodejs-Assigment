@@ -1,3 +1,4 @@
+import moment from "moment";
 import { hashPassword } from "../configs/bcrypt.config";
 import Users, { IUser } from "../models/user.mongo";
 import { UserQuery } from "../types/nationQuery";
@@ -10,20 +11,39 @@ class UsersService {
     // const query = name
     //   ? { name: { $regex: new RegExp(`.*${name}.*`, "i") } }
     //   : {};
-
     const { skip, limit, page } = getPagination({
       limit: query.limit,
       page: query.page,
     });
 
 
-    const mongoQuery = {
+    const mongoQuery: any = {
       email: { $not: { $regex: userEmail, $options: 'i' } },
       $or: [
-        { name: { $regex: query.searchValue || '', $options: 'i' } },
-        { email: { $regex: query.searchValue || '', $options: 'i' } },
+        { name: { $regex: query.q || '', $options: 'i' } },
+        { email: { $regex: query.q || '', $options: 'i' } },
       ],
     };
+    console.log(query.isAdmin);
+
+    if (typeof query.isAdmin !== 'undefined') {
+      mongoQuery.isAdmin = query.isAdmin
+    }
+
+    if (typeof query.ageRange !== 'undefined' && query.ageRange.length > 0) {
+      console.log(new Date(new Date().getFullYear() - (Number(query.ageRange[0]), 0, 1)));
+      const startAge = (Number(query.ageRange[0])); // Start age of range
+      const endAge = (Number(query.ageRange[1])); // End age of range
+      console.log(startAge, endAge);
+
+      const startDOB = new Date(new Date().setFullYear(new Date().getFullYear() - endAge)); // Calculate start date of range
+      const endDOB = new Date(new Date().setFullYear(new Date().getFullYear() - startAge)); // Calculate end date of range
+      mongoQuery.yob = {
+        $lte: endDOB,
+        $gte: startDOB
+      }
+
+    }
 
     const { count, models } = await queryModel(Users, mongoQuery, skip, limit)
 
@@ -32,10 +52,8 @@ class UsersService {
     }
   }
 
-  async getUser(email: string) {
-    return await Users.findOne({
-      email,
-    });
+  async getUser(value: string) {
+    return await Users.findOne({ $or: [{ email: value }, { phone: value }] });
   }
 
   async getUserById(id: string) {
@@ -55,6 +73,7 @@ class UsersService {
       email: user.email,
       name: user.name,
       yob: user.yob,
+      phone: user.phone
     });
   }
 
@@ -63,6 +82,15 @@ class UsersService {
     return await Users.findByIdAndUpdate(id, {
       password: await hashPassword(password)
     })
+  }
+
+  async updateUserPasswordByOr(verifyBy: string, password: string) {
+    console.log(verifyBy);
+
+    return await Users.findOneAndUpdate({ $or: [{ email: verifyBy }, { phone: verifyBy }] }, {
+      password: await hashPassword(password)
+    }, { new: true },
+    )
   }
 }
 
