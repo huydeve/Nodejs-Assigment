@@ -1,0 +1,125 @@
+<% const isPlayer=typeof player !=='undefined' %>
+
+    <% const value=isPlayer ? `-${player.id}` : '' %>
+
+        <button class="js-modal-trigger button is-primary <%= typeof absolute !== 'undefined' && `button-absolute` %>"
+            data-target="modal-js<%= value %>">
+            <%=typeof titleButton !=='undefined' ? titleButton : `Add button` %>
+
+        </button>
+        <div id="modal-js<%= value %>" class="modal">
+            <div class="modal-background"></div>
+
+            <div class="modal-content">
+                <div class="hero ">
+                    <div class="hero-body is-justify-content-center is-align-items-center ">
+
+                        <div class="columns is-flex is-flex-direction-column box">
+                            <p class="title">
+                                <%= title%>
+
+                            </p>
+                            <form class="form-login" action="<%=URL%>" enctype="multipart/form-data"
+                                method="post">
+                                <% if (errorMessage.length> 0) { %>
+
+                                    <div class="column">
+
+                                        <div class="notification is-danger">
+                                            <%= errorMessage %>
+
+                                        </div>
+                                    </div>
+
+                                    <% } %>
+                                        <div class="column">
+                                            <label for="name">Name</label>
+                                            <input class="input is-primary" required type="text" name="name"
+                                                value="<%=isPlayer ? player.name : `` %>" placeholder="Name of player">
+                                        </div>
+                                        <div class="column">
+                                            <label for="name">Club</label>
+                                            <div class="select is-fullwidth is-primary">
+                                                <select required name="club">
+                                                    <% clubs.forEach(club=> { %>
+                                                        <option value="<%=club%>" <%=(isPlayer && player.club===club)
+                                                            ? 'selected' : '' %>><%=club%>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <label for="name">Nation</label>
+                                            <div class="select is-fullwidth is-primary">
+                                                <select required name="nation">
+                                                    <% nations.forEach(nation=> { %>
+                                                        <option value="<%=nation._id%>" <%=(isPlayer &&
+                                                            player.nation===nation._id) ? 'selected' : '' %>>
+                                                            <%=nation.name%>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="column">
+                                            <label for="name">Position</label>
+                                            <div class="select is-fullwidth is-primary">
+                                                <select required name="position">
+                                                    <% positions.forEach(position=> { %>
+                                                        <option value="<%=position%>" <%=(isPlayer &&
+                                                            player.position===position) ? 'selected' : '' %>>
+                                                            <%=position%>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div class="column">
+                                            <label for="password">Goals</label>
+                                            <input required class="input is-primary" type="number" min="0" max="1000"
+                                                name="goals" value="<%=isPlayer ? player.goals : 0 %>"
+                                                placeholder="Goals of player">
+                                        </div>
+                                        <div class="column">
+                                            <label for="password">Career</label>
+                                            <input required class="input is-primary" type="text" name="career"
+                                                value="<%=isPlayer ? player.career : '' %>"
+                                                placeholder="Career of player">
+                                        </div>
+                                        <div class="column">
+                                            <input type="file" id="myfile" name="image"><br><br>
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="isCaptain" <%=typeof player !=='undefined'
+                                                    && player.isCaptain && `checked` %>>
+                                                Is captain ?
+                                            </label>
+                                        </div>
+
+                                        <div class="column">
+
+                                            <% if (!isPlayer) { %>
+                                                <button class="button is-primary is-fullwidth" type="submit">
+                                                    Add
+                                                </button>
+                                                <% } else { %>
+                                                    <input type="hidden" name="_method" value="put" />
+                                                    <input type="hidden" name="id" value="<%= player._id %>" />
+                                                    <button class="button is-primary is-fullwidth" type="submit">
+                                                        Update
+                                                    </button>
+
+                                                    <%}%>
+                                        </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>

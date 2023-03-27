@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+.btn:hover {
+  opacity: 1;
+}
+.google {
+  background-color: #dd4b39;
+  color: white;
+}
+
+a {
+  text-decoration: none !important;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+}
+body {
+  margin: 0 ;
+  position: relative;
+}
+
+.animation-scale {
+  transition: transform 0.2s; /* Animation */
+}
+
+.animation-scale:hover {
+  z-index: 1000;
+  transform: scale(1.1);
+}
+
+
+.navbar {
+  position: fixed;
+  border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+  width: 100%;
+}
+.navbar .navbar-brand{
+  background-color: #1bd3b5;
+}
+
+.navbar-scroll .navbar-brand{
+  background-color: rgb(0, 0, 0, 0.0);
+}
+
+.navbar-scroll .button {
+  background-color: rgb(0, 0, 0, 0.1);
+  color: #fff;
+}
+
+.navbar-scroll.scrolled .signup{
+  background-color: #1bd3b5;
+  transition: background-color 200ms linear;
+}
+
+.navbar.scrolled .login{
+  background-color: #191a19;
+  transition: background-color 200ms linear;
+}
+
+.navbar-scroll{
+  position: fixed;
+  width: 100%;
+  background: none;
+  z-index: 1000;
+}
+
+.navbar-scroll .navbar-item {
+  color: #fff;
+}
+
+.navbar-scroll .navbar-item {
+  color: #fff;
+}
+
+.navbar-scroll.scrolled .navbar-brand{
+  background-color: #1bd3b5;
+  transition: background-color 200ms linear;
+}
+
+.navbar-scroll.scrolled .navbar-item{
+  color: gray;
+  transition: color 200ms linear;
+}
+.navbar-scroll.scrolled {
+  background-color: #fff !important;
+  transition:  background-color 200ms linear;
+}
+
+
+
+.button-absolute {
+  z-index: 2;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  margin: 0 30px 30px 0;
+}
+
+
+
+/* login page */
+.background-login {
+  position: fixed;
+  z-index: -1;
+  right: 0;
+  bottom: 0;
+  min-width: 100vh;
+  min-height: 100vh;
+}
+.logo-login {
+  width: 200px;
+  padding: 16px;
+}
+
+/* index page */
+
+.container {
+  height: 100vh;
+  width: 100vh;
+  align-items: center;
+  display: flex;
+}
+
+.section-home{
+
+  background-image: url("https://digitalhub.fifa.com/transform/b817ecc7-f044-45b8-8f67-a084a5d10e39/Argentina-v-France-Final-FIFA-World-Cup-Qatar-2022?io=transform:fill,height:1024,width:1920&quality=100");
+}
+
+.my-card{
+  opacity: 0.95;
+}
+
+/* nation page */
+
+.page-title-nation, .page-title-player{
+
+padding-top: 56px;}
+
+.page-title-nation > div,.page-title-player > div {
+  width: 100%;
+  height: 100px;
+  padding: 8px;
+  background-color: hsl(171, 100%, 41%);
+  display: flex;
+  align-items: center;
+  font-size: 32px;
+  text-transform: uppercase;
+  color: white;
+  justify-content: space-between;
+}
+
+.slide {
+  position: relative;
+}
+
+.logo-slide {
+  top: 15%;
+  bottom: 60%;
+  left: 1%;
+  position: absolute;
+  z-index: 100;
+  width: 90%;
+}
+
+
+.container-players,.container-nations{
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.container-players > div{
+  padding: 8px;
+}
+
+.container-players .card-image {
+  height: 100%;
+}
+
+.container-players .card-image > figure{
+  min-height: 500px;
+  height: 100%;
+  width: 400px;
+}
+.container-players img {
+  object-fit: cover;
+}
+
+.container-nations{
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container-nations .card-image > figure{
+  height: 300px;
+  width: 300px;
+}
+
+.tile input {
+  background: transparent;
+  width: 100%;
+}
+
+
+
+.dropdown-content {
+  padding: 16px;
+}

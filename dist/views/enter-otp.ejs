@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./ui/head.ejs') %>
+
+</head>
+
+<body>
+  <%- include('./component/background.ejs') %>
+
+    <div class="hero is-fullheight">
+      <div class="hero-body is-justify-content-center is-align-items-center">
+        <div class="columns is-flex is-flex-direction-column box"
+          style="background: rgba(0,0,0,0.53)!important; color: white;">
+          <%- include('./component/logo.ejs') %>
+
+            <form action="/auth/forgot-password/verify-otp" method="post">
+              <% if (errorMessage.length> 0) { %>
+                <div class="column">
+
+                  <div class="notification is-danger">
+                    <%= errorMessage %>
+
+                  </div>
+                </div>
+
+                <% } %>
+                  <div id="notification"></div>
+                  <div id="input-auth" class="column">
+                    <input class="input is-primary" required name="otp" type="text" placeholder="Enter OTP">
+                  </div>
+                  <div class="column">
+                    <button class="button is-primary is-fullwidth my-3" type="submit">Send</button>
+                  </div>
+            </form>
+            <button id="resend">Resend OTP</button>
+
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      $(document).ready(function () {
+        // create a new button element
+        const data = {
+          notRender: true,
+        }
+ 
+        
+
+        // attach an event listener to the button
+        $('#resend').click(function () {
+          $.ajax({
+            url: '/auth/forgot-password/send-otp',
+            type: 'POST',
+            data,
+            success: function (result) {
+              $('#notification').html('Resend OTP Success, pls wait').addClass('notification is-primary')
+            },
+            error: function (xhr, status, error) {
+              $('#notification').html('error')
+
+            }
+          })
+        })
+
+      }
+
+      )
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+
+    <%- include('./component/background.ejs') %>
+
+        <form class="form-login" action="/auth/login" method="post">
+            <div class="hero is-fullheight">
+                <div class="hero-body is-justify-content-center is-align-items-center ">
+
+                    <div class="columns is-flex is-flex-direction-column box"
+                        style="background: rgba(0,0,0,0.53)!important; color: white;">
+                        <%- include('./component/logo.ejs') %>
+                        <% if (errorMessage.length> 0) { %>
+                            <div class="column">
+
+                                <div class="notification is-danger">
+                                        <%= errorMessage %>
+
+                                </div>
+                            </div>
+
+                            <% } %>
+                            <div class="column">
+                                <label for="email">Email</label>
+                                <input class="input is-primary" name="email" type="text" placeholder="Email">
+                            </div>
+                            <div class="column">
+                                <label for="password">Password</label>
+                                <input class="input is-primary" name="password" type="password" placeholder="Password">
+                            </div>
+                     
+
+                                    <div class="column">
+                                        <a href="/auth/google" class="google btn"><i class="fa fa-google fa-fw">
+                                            </i> Login with Google+
+
+                                        </a>
+                                    </div>
+                                    <div class="column">
+                                        <button class="button is-primary is-fullwidth" type="submit">Login</button>
+                                    </div>
+                                    <div class="has-text-centered">
+                                        <p class="is-size-7"> Don't have an account? <a href="/auth/registration/page"
+                                                class="has-text-primary">Sign up</a>
+                                                <a href="/auth/forgot-password/page">Forgot Password</a>
+                                        </p>
+                                    </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+</body>
+
+</html>

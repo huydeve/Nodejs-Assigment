@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+        <div class="page-title-player">
+            <div>
+                <h1>Player Detail</h1>
+
+            </div>
+        </div>
+        <div class="container-players">
+            <%- include('./component/card-player.ejs', { player, content:false }) %>
+                <div class="tile is-ancestor" style="margin: 0px 0;">
+                    <div class="tile is-vertical is-12">
+
+
+                        <div class="tile is-parent is-vertical">
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Role</p>
+                                <p class="title">
+                                    <%- include('./component/captain.ejs') %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Name</p>
+                                <p class="title">
+                                    <%=player.name %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Club</p>
+                                <p class="title">
+                                    <%=player.club %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Nation</p>
+                                <p class="title">
+                                    <%=player.nation.name %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Position</p>
+                                <p class="title">
+                                    <%=player.position %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Career</p>
+                                <p class="title">
+                                    <%=player.career %>
+                                </p>
+                            </article>
+                            <article class="tile is-child notification is-primary">
+                                <p class="subtitle">Goals</p>
+                                <p class="title">
+                                    <%=player.goals %>
+                                </p>
+                            </article>
+                        </div>
+
+                    </div>
+
+                </div>
+
+        </div>
+        </div>
+</body>
+
+
+</html>

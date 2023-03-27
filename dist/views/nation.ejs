@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+        <div class="page-title-nation">
+            <div>
+                <h1>Nation</h1>
+                <%- include('./component/search-form.ejs',{url:"/nations/filter" , q}) %>
+
+
+            </div>
+
+        </div>
+      
+
+        <div id="myTable">
+
+            <div id="tableBody">
+                <%- include('./component/nation-row.ejs', {nations, URL: "/nations/filter" }) %>
+
+            </div>
+
+        </div>
+</body>
+
+
+</html>

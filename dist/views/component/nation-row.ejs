@@ -1,0 +1,67 @@
+<% if (URL.includes("admin")) { %>
+    <% if (nations.length> 0) { %>
+        <% nations.forEach((nation,index)=> { %>
+            <tr>
+                <td>
+                    <%= index %>
+                </td>
+                <td>
+                    <figure class="image is-64x64">
+                        <img class="is-rounded" src="<%= nation.image%>" />
+                    </figure>
+                </td>
+                <td>
+                    <%= nation.name %>
+                </td>
+                <td>
+                    <%= nation.description %>
+                </td>
+                <td>
+                    <div style="display: flex; gap: 16px;">
+                        <!-- <form action="/admin/nations/<%= nation._id %>" method="post"
+                                    onsubmit="return validate(this);">
+                                    <input type="hidden" name="_method" value="delete" />
+                                    <input required class="button is-danger" type="submit" value="Delete" />
+                                </form> -->
+                        <div>
+                            <%- include('./nation-button.ejs', {nation, titleButton: "Update" }) %>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <% }) %>
+                <% } %>
+                    <tr>
+                        <td style="display: flex;">
+                            <div class="limit-row">
+                                <%- include('./limit-row.ejs',{url:URL, page:currentPage}) %>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td><%- include('./pagination.ejs',{url:URL}) %></td>
+                        <td></td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <% } else { %>
+
+
+
+                        <div class="container-nations" style="margin: 16px 16px;">
+                            <% nations.forEach(nation=> { %>
+                                <a href=<%=`/nations/page/${nation._id}` %>>
+                                    <%- include('./card-nation.ejs', { nation }) %>
+                                        <% }) %>
+                                </a>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 16px">
+                            <%- include('./pagination.ejs',{url:URL }) %>
+
+                                <%- include('./limit-row.ejs',{url:URL, page:currentPage}) %>
+
+                        </div>
+
+
+
+                        <% }%>

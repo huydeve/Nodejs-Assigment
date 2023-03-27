@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+
+        <div class="page-title-player">
+            <div>
+                <h1>Player <%=currentPage%>
+                </h1>
+                <%- include('./component/search-form.ejs',{url:"/players/filter" , q}) %>
+
+            </div>
+
+        </div>
+
+        <%- include('./component/player-filter.ejs',{URL: "/players/filter" ,q}) %>
+            <div id="myTable">
+
+
+                <div id="tableBody">
+                    <%- include('./component/player-row.ejs', {players, URL: "/players" }) %>
+
+                </div>
+
+            </div>
+</body>
+
+
+</html>

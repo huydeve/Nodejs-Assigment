@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+        <% const URL="/admin/nations" %>
+            <div class="page-title-nation">
+                <div>
+                    <h1>Nation</h1>
+
+                    <%- include('./component/search-form.ejs',{url:URL + "/filter" , q}) %>
+
+                </div>
+            </div>
+     
+            <table id="myTable" class="table" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableBody"> <%- include('./component/nation-row.ejs',{nations, URL:URL + "/filter", isAdmin:true}) %></tbody>
+            </table>
+
+                </div>
+                <%- include('./component/nation-button.ejs', {absolute:true}) %>
+</body>
+
+</html>

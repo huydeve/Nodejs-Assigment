@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+  <%- include('./ui/navbar-scroll.ejs') %>
+    <div> <%- include('./component/slide.ejs') %>
+    </div>
+
+    <div class="section-home">
+      <div class="container px-2">
+        <div >
+          <div class="tile is-ancestor">
+            <div class="tile is-vertical is-12">
+              <div class="tile">
+                <div class="tile is-parent is-vertical">
+                  <article class="tile is-child notification is-primary animation-scale my-card">
+                    <a href="/nations/page">
+                      <p class="title">Nation</p>
+                      <p class="subtitle">Move to page</p>
+                    </a>
+                  </article>
+                  <article class="tile is-child notification is-primary animation-scale my-card">
+                    <a href="/players/page">
+                      <p class="title">Player</p>
+                      <p class="subtitle">Move to page</p>
+                    </a>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</body>
+
+</html>

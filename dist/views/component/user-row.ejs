@@ -1,0 +1,44 @@
+<% users.forEach((user,index)=> { %>
+    <tr>
+        <td>
+            <%= index %>
+        </td>
+        <td>
+            <%= user.name %>
+        </td>
+        <td>
+            <%= user.email %>
+        </td>
+        <td>
+            <%= user.yob %>
+        </td>
+        <td>
+            <%= user.isAdmin %>
+        </td>
+
+    </tr>
+    <% }) %>
+        <tr>
+            <td style="display: flex;">
+                <%- include('./limit-row.ejs',{url:URL, page:currentPage}) %>
+
+            </td>
+            <td>
+
+            </td>
+
+            <td>
+                <%- include('./pagination.ejs',{url:URL}) %>
+
+            </td>
+
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+        </tr>

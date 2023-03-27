@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+  <%- include('./component/background.ejs') %>
+
+    <div class="hero is-fullheight">
+      <div class="hero-body is-justify-content-center is-align-items-center">
+        <div class="columns is-flex is-flex-direction-column box"
+          style="background: rgba(0,0,0,0.53)!important; color: white;">
+          <%- include('./component/logo.ejs') %>
+
+            <form action="/auth/registration" method="post">
+              <% if (errorMessage.length> 0) { %>
+                <div class="column">
+
+                  <div class="notification is-danger">
+                    <%= errorMessage %>
+
+                  </div>
+                </div>
+
+                <% } %>
+                  <div class="column">
+                    <label for="email">Email</label>
+                    <input class="input is-primary" id="email" name="email" type="email" required
+                      placeholder="Enter Email">
+                  </div>
+                  <div class="column">
+                    <label for="name">Name</label>
+                    <input class="input is-primary" id="email" name="name" type="text" required
+                      placeholder="Enter Name">
+                  </div>
+
+                  <div class="column">
+                    <label for="Name">Yob</label>
+                    <input class="input is-primary" id="yob" name="yob" type="date" required placeholder="Enter Yob">
+                  </div>
+                  <div class="column">
+                    <label for="Name">Password</label>
+                    <input class="input is-primary" id="password" name="password" type="password" required
+                      placeholder="Enter Password">
+                  </div>
+
+                  <div class="column">
+                    <button class="button is-primary is-fullwidth my-3" type="submit">Create an account</button>
+                  </div>
+            </form>
+            <div class="has-text-centered">
+              <p> Already have an account? <a href="/auth/page/login" class="has-text-primary">Login</a>
+              </p>
+            </div>
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<div style="display: flex; justify-content: space-between; margin: 16px;">
+    <div>
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Is Admin</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <input type="radio" name="isAdmin" value="on">
+                    <label for="red-radio">Yes</label>
+                    <br>
+                    <input type="radio" name="isAdmin" value="off">
+                    <label for="green-radio">No</label>
+                    <br>
+                    <input id="default" type="radio" name="isAdmin" value="" checked>
+                    <label for="blue-radio">Both</label>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Sort</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <select id="sortBy" style="width: 100%;">
+                        <option class="default" value="">
+                            None
+                        </option>
+                        <option value="name">
+                            Name
+                        </option>
+                        <option value="email">
+                            Email
+                        </option>
+                        <option value="yob">
+                            Birth day </option>
+                    </select>
+                    <br>
+                    <input type="radio" name="sortType" value="1" id="red-radio">
+                    <label for="red-radio">ASC</label>
+                    <br>
+                    <input type="radio" name="sortType" value="-1" id="green-radio">
+                    <label for="green-radio">DES</label>
+                    <br>
+                    <input class="default" type="radio" name="sortType" value="" checked id="blue-radio">
+                    <label for="blue-radio">None</label>
+                </div>
+            </div>
+
+        </div>
+        <button id="reset" class="button">
+            Reset
+        </button>
+    </div>
+    <div style=" width: 400px; display: flex; justify-content: center; align-items: center;">
+        <p>Age</p>
+        <%- include('./range-slider.ejs',{ maxValue:120, maxDefault: 50, URL: url}) %>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdown = document.querySelector('.dropdown');
+        dropdown.addEventListener('click', function (event) {
+            event.stopPropagation();
+            dropdown.classList.toggle('is-active');
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        let sortBy = undefined
+        let sortType = undefined
+        $('input[type=radio], input[name="sortType"], #sortBy').change(function () {
+            filter();
+        });
+
+        $('#reset').click(() => {
+            $('#searchInput').val('')
+            $('#range-left').val('0')
+            $('#range-right').val('120')
+            $('#slider').slider('values', [$('#range-left').val(), $('#range-right').val()]);
+            $('#sortBy').val("")
+            $('#default').prop('checked', true);
+            isAdmin = undefined;
+            ageRange = undefined;
+            sortBy = undefined;
+            sortType = undefined;
+            q = undefined;
+            $.ajax({
+                url: '<%= url %>',
+                type: 'GET',
+                data: { isAdmin, ageRange, limit, page: 1, q, sortBy, sortType },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        })
+
+        function filter() {
+            // Get all checked values
+            isAdmin = $('input[name="isAdmin"]:checked').val()
+            if (isAdmin == "") {
+                isAdmin = undefined
+            } else if (isAdmin == "on") {
+                isAdmin = true
+            } else {
+                isAdmin = false
+            }
+
+            sortBy = $('#sortBy').val();
+            sortType = $('input[name="sortType"]:checked').val()
+            if (sortType == "") {
+                sortType = undefined
+
+            } else if (sortBy == "") {
+                sortBy = undefined
+            }
+            $.ajax({
+                url: '<%= url %>',
+                type: 'GET',
+                data: { isAdmin, ageRange, limit, page: 1, q, sortBy, sortType },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+
+        }
+
+    });
+</script>

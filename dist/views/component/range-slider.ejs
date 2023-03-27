@@ -1,0 +1,169 @@
+<style>
+    :root {
+        --ColorPrimaryDk: #193957;
+        --ColorPrimaryLt: #31689b;
+    }
+
+
+    .value {
+        position: absolute;
+        top: 30px;
+        left: 50%;
+        margin: 0 0 0 -20px;
+        width: 40px;
+        text-align: center;
+        display: block;
+
+        /* optional */
+
+        font-weight: normal;
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .price-range-both.value {
+        width: 100px;
+        margin: 0 0 0 -50px;
+        top: 26px;
+    }
+
+    .price-range-both {
+        display: none;
+    }
+
+    .value i {
+        font-style: normal;
+    }
+</style>
+<input id="range-left" style="margin-left:16px; width : 60px; border: #193957 1px solid; border-radius:10px ;"
+    type="number" class="range-slider-input" min="0" max=<%=maxValue %>>
+<div id="slider" style="width: 400px; margin: 0 16px;"></div>
+<input id="range-right" style="width: 60px; border: #193957 1px solid; border-radius:10px ;" min="0" max=<%=maxValue %>
+type="number"
+class="range-slider-input">
+<script>
+
+    /** Default config */
+    $(function () {
+        const max = <%=maxValue%>
+
+            function collision($div1, $div2) {
+                var x1 = $div1.offset().left;
+                var w1 = 40;
+                var r1 = x1 + w1;
+                var x2 = $div2.offset().left;
+                var w2 = 40;
+                var r2 = x2 + w2;
+
+                if (r1 < x2 || x1 > r2) return false;
+                return true;
+
+            }
+
+        // // slider call
+
+
+        function updateInputs(leftValue, rightValue) {
+            $('#range-left').val(leftValue);
+            $('#range-right').val(rightValue);
+        }
+
+
+        function filter(value1, value2) {
+            const isUser = `<%=isUser%>`
+            let data = {
+
+            }
+            if (isUser === '') {
+                goalsRange = [value1, value2]
+                data = {
+                    page: 1, limit, q, clubs, positions, nations, isCaptain,
+                    goalsRange
+                }
+            } else {
+                ageRange = [value1, value2]
+                data = {
+                    isAdmin,
+                    ageRange
+                }
+            }
+            $.ajax({
+                url: '<%= URL %>',
+                type: 'GET',
+                data,
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+
+                    // Update current page
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        }
+
+        $('#range-left').on('input', function () {
+            slider.slider('values', [$('#range-left').val(), $('#range-right').val()]);
+            filter($('#range-left').val(), $('#range-right').val())
+        });
+
+        $('#range-right').on('input', function () {
+            slider.slider('values', [$('#range-left').val(), $('#range-right').val()]);
+            filter($('#range-left').val(), $('#range-right').val())
+
+        });
+
+
+
+        var slider = $('#slider').slider({
+            range: true,
+            min: 0,
+            max: max,
+            values: [0, <%=maxDefault %>],
+            slide: function (event, ui) {
+
+                // $('.ui-slider-handle:eq(0) .price-range-min').html(ui.values[0]);
+                // $('.ui-slider-handle:eq(1) .price-range-max').html(ui.values[1]);
+                // $('.price-range-both').html('<i>' + ui.values[0] + ' - </i>' + ui.values[1]);
+
+                //
+
+                $('#range-left').val(ui.values[0]);
+                $('#range-right').val(ui.values[1]);
+                if (ui.values[0] == ui.values[1]) {
+                    $('.price-range-both i').css('display', 'none');
+                } else {
+                    $('.price-range-both i').css('display', 'inline');
+                }
+
+                //
+
+                if (collision($('.price-range-min'), $('.price-range-max')) == true) {
+                    $('.price-range-min, .price-range-max').css('opacity', '0');
+                    $('.price-range-both').css('display', 'block');
+                } else {
+                    $('.price-range-min, .price-range-max').css('opacity', '1');
+                    $('.price-range-both').css('display', 'none');
+                }
+
+                filter(ui.values[0], ui.values[1])
+            }
+        });
+
+        $('.ui-slider-range').append('<span class="price-range-both value"><i> </span>');
+
+        $('.ui-slider-handle:eq(0)').append('<span class="price-range-min value">' + '</span>');
+
+        $('.ui-slider-handle:eq(1)').append('<span class="price-range-max value">' + '</span>');
+
+        updateInputs(slider.slider('values', 0), slider.slider('values', 1));
+
+
+    });
+
+
+
+
+</script>

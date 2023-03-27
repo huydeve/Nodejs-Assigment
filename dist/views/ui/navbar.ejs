@@ -1,0 +1,50 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand ">
+    <a class="navbar-item" href="/">
+      <img
+        src="https://digitalhub.fifa.com/transform/178fcbc2-4bc8-4481-8b67-7a10895dcbfc/FIFA?io=transform:fill&quality=75"
+        width="112" height="28" />
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <% if (session && session.user.profile.isAdmin) { %>
+        <a class="navbar-item" href="/admin/dashboard">Dashboard  </a>
+
+        <a class="navbar-item" href="/admin/nations"> Nations </a>
+        <a class="navbar-item" href="/admin/players"> Players </a>
+        <a class="navbar-item" href="/admin/users"> Users </a>
+        <% } else { %>
+          <a class="navbar-item" href="/"> Home </a>
+          <a class="navbar-item" href="/nations/page"> Nation </a>
+          <a class="navbar-item" href="/players/page"> Player </a>
+          <% } %>
+
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <% if (session) { %>
+          <a href="/auth/profile/page">Welcome, <%= session.user.profile.name %>!</a>
+          <a class="button signup" href="/auth/logout" style="margin-left: 16px;">
+            Log out
+          </a>
+          <% } else { %>
+            <div class="buttons">
+              <a class="button signup" href="/auth/registration/page">
+                Sign up
+              </a>
+              <a class="button login" href="/auth/login/page"> Log in </a>
+            </div>
+            <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

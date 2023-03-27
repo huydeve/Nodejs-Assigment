@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+        <% const URL="/admin/players" %>
+
+            <div class="page-title-nation">
+                <div>
+                    <h1>Player</h1>
+
+                    <%- include('./component/search-form.ejs',{url:URL + "/filter" , q}) %>
+
+
+                </div>
+            </div>
+            <%- include('./component/player-filter.ejs',{URL:URL + "/filter"  ,q}) %>
+
+
+
+                <table class="table" id="myTable" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Club</th>
+                            <th>Position</th>
+                            <th>Goals</th>
+                            <th>Career</th>
+                            <th>Is Captain</th>
+                            <th>Nation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tableBody"> <%- include('./component/player-row.ejs',{players, URL,isAdmin:true}) %>
+                    </tbody>
+
+                </table>
+
+                </div>
+
+                <%- include('./component/player-button.ejs', {absolute: true, URL}) %>
+</body>
+
+</html>

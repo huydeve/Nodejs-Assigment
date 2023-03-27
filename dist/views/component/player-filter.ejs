@@ -1,0 +1,243 @@
+<div style="margin: 16px; display: flex; justify-content: space-between;">
+    <div>
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Position</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <% positions.forEach(pos=> { %>
+                        <label><input type="checkbox" name="position[]" value="<%=pos%>" id="yellow" />
+                            <%=pos %>
+                        </label><br>
+
+                        <% }) %>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Nation</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content" style="overflow-y: scroll; max-height: 300px;">
+                    <% nations.forEach(nation=> { %>
+                        <label><input type="checkbox" name="nation[]" value="<%=nation._id%>" id="yellow" />
+                            <%=nation.name %>
+                        </label><br>
+
+                        <% }) %>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Club</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <% clubs.forEach(club=> { %>
+                        <label><input type="checkbox" name="club[]" value="<%=club%>" id="yellow" />
+                            <%=club %>
+                        </label><br>
+
+                        <% }) %>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Is Captain</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <input type="radio" name="isCaptain" value="on" id="red-radio">
+                    <label for="red-radio">Yes</label>
+                    <br>
+                    <input type="radio" name="isCaptain" value="off" id="green-radio">
+                    <label for="green-radio">No</label>
+                    <br>
+                    <input class="default" type="radio" name="isCaptain" value="" checked id="blue-radio">
+                    <label for="blue-radio">Both</label>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="dropdown is-hoverable">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu4">
+                    <span>Sort</span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <select id="sortBy" style="width: 100%;">
+                        <option class="default" value="">
+                            None
+                        </option>
+                        <option value="name">
+                            Name
+                        </option>
+                        <option value="club">
+                            Club
+                        </option>
+                        <option value="position">
+                            Position </option>
+                        <option value="goals">
+                            Goals </option>
+                        <option value="career">
+                            Career
+                        </option>
+                        <option value="nation">
+                            Nation
+                        </option>
+                    </select>
+                    <br>
+                    <input type="radio" name="sortType" value="1" id="red-radio">
+                    <label for="red-radio">ASC</label>
+                    <br>
+                    <input type="radio" name="sortType" value="-1" id="green-radio">
+                    <label for="green-radio">DES</label>
+                    <br>
+                    <input class="default" type="radio" name="sortType" value="" checked id="blue-radio">
+                    <label for="blue-radio">None</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dropdown">
+            <button id="reset" class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu4">
+                <span>Reset</span>
+            </button>
+
+        </div>
+    </div>
+    <div style=" width: 400px; display: flex; justify-content: center; align-items: center;">
+        <p>Goals</p>
+        <%- include('./range-slider.ejs',{ maxValue:1000, maxDefault: 1000, isUser:undefined}) %>
+    </div>
+
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdown = document.querySelector('.dropdown');
+        dropdown.addEventListener('click', function (event) {
+            event.stopPropagation();
+            dropdown.classList.toggle('is-active');
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        let sortBy = undefined
+        let sortType = undefined
+        $('input[type=checkbox], input[type=radio], #sortBy').change(function () {
+            filter();
+        });
+
+        $('#reset').click(() => {
+            $('input[name="nation[]"]').prop('checked', false);
+            $('input[name="position[]"]').prop('checked', false);
+            $('input[name="club[]"]').prop('checked', false)
+            $('#searchInput').val('')
+            $('#range-left').val('0')
+            $('#range-right').val('1000')
+            $('#slider').slider('values', [$('#range-left').val(), $('#range-right').val()]);
+
+            $('.default').prop('checked', true);
+            $('#sortBy').val("")
+
+            isCaptain = undefined;
+            positions = undefined;
+            clubs = undefined;
+            nations = undefined;
+            goalsRange = undefined;
+            q = undefined;
+            sortBy = undefined;
+            sortType = undefined;
+            $.ajax({
+                url: '<%= URL %>',
+                type: 'GET',
+                data: { isCaptain, positions, clubs, nations, limit, page: 1, q, goalsRange, sortBy, sortType },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        })
+
+        function filter() {
+            // Get all checked values
+            nations = $('input[name="nation[]"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+
+            positions = $('input[name="position[]"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+            clubs = $('input[name="club[]"]:checked').map(function () {
+                return $(this).val();
+            }).get();
+
+            sortBy = $('#sortBy').val();
+            sortType = $('input[name="sortType"]:checked').val()
+
+            if (sortType == "") {
+                sortType = undefined
+
+            } else if (sortBy == "") {
+                sortBy = undefined
+            }
+
+
+            isCaptain = $('input[name="isCaptain"]:checked').val()
+            if (isCaptain == "") {
+                isCaptain = undefined
+            }
+            $.ajax({
+                url: '<%= URL %>',
+                type: 'GET',
+                data: { isCaptain, positions, clubs, nations, limit, page: 1, q, sortType, sortBy },
+                success: function (result) {
+                    $('#myTable #tableBody').html(result);
+                    setupModal();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+
+        }
+
+    });
+</script>

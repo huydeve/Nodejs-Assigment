@@ -1,0 +1,32 @@
+<div style="display: flex; justify-content: end;">
+  <div class="select">
+    <select id="my-select">
+      <% [5,10,15].forEach(row=> { %>
+        <option value="<%=row%>" <%=(limit && limit===row) ? 'selected' : '' %>><%=row%>
+        </option>
+        <% }) %>
+    </select>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // Add change event listener to select dropdown
+    $('#my-select').on('change', function () {
+      limit = $(this).val();
+      $.ajax({
+        url: '<%= url %>',
+        type: 'GET',
+        data: { page: 1, limit, q: `<%=q%>` },
+        success: function (result) {
+          $('#myTable #tableBody').html(result);
+          setupModal();
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log(jqXHR.responseText);
+        }
+      });
+    });
+  });
+</script>

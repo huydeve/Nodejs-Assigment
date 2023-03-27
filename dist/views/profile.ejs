@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+
+        <div class="page-title-player">
+            <div>
+                <h1>User Profile</h1>
+
+            </div>
+
+        </div>
+        <% if (errorMessage.length> 0) { %>
+            <div class="is-fullwidth" style="margin: 16px;">
+
+                <div class="notification is-danger">
+                    <%= errorMessage %>
+
+                </div>
+            </div>
+
+            <% } %>
+                <form action="/auth/profile" method="post">
+                    <div style="display: flex; justify-content: space-between; margin: 16px 16px 0px 16px;">
+                        <h1 class="title">User Info</h1>
+                        <div class="field has-addons">
+                            <div class="control">
+                                <button type="submit" class="button is-dark">
+                                    Update info
+                                </button>
+                                <input type="hidden" name="_method" value="put" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tile is-ancestor" style="margin: 0px 0;">
+                        <div class="tile is-vertical is-12">
+                            <div class="tile is-parent">
+                                <article class="tile is-child notification is-info">
+                                    <p class="subtitle">Your Email</p>
+                                    <input class="title" name="email" type="email" required
+                                        value="<%= session.user.profile.email %>" />
+
+                                </article>
+                            </div>
+                            <div class="tile">
+                                <div class="tile is-parent is-vertical">
+                                    <article class="tile is-child notification is-info">
+                                        <p class="subtitle">Your Name</p>
+                                        <input class="title" name="name" value="<%= session.user.profile.name %>" />
+
+                                    </article>
+                                    <article class="tile is-child notification is-info">
+                                        <p class="subtitle">Your Day of birth</p>
+                                        <input class="title" name="yob" type="date"
+                                            value="<%= session.user.profile.yob %>" />
+
+                                    </article>
+                                    <article class="tile is-child notification is-info">
+                                        <p class="subtitle">Your Phone</p>
+                                        <input id="phoneNumber" class="title" title="Please enter valid phone number "
+                                            maxlength="12" pattern="([\+84]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{10})\b"
+                                            name="phone" size="20" required value="<%= session.user.profile.phone %>"
+                                            oninvalid="setCustomValidity('Invalid number phone example: +840123456700.')"
+                                            onchange="try{setCustomValidity('')}catch(e){}">
+
+                                    </article>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+
+                <form action="/auth/changePassword" method="post">
+
+                    <div style="display: flex; justify-content: space-between; margin: 16px 16px 0px 16px;">
+                        <h1 class="title">User Password</h1>
+                        <div class="field has-addons">
+                            <div class="control">
+                                <button id="send" type="submit" class="button is-dark">
+                                    Change password
+                                </button>
+                                <input type="hidden" name="_method" value="put" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tile">
+                        <div class="tile is-parent is-vertical">
+
+                            <article class="tile is-child notification is-info">
+                                <div id="error">
+
+                                </div>
+                                <% if (havePassword) { %>
+                                    <p class="subtitle">Old password</p>
+                                    <input class="title" name="oldPassword" type="password"
+                                        placeholder="Enter old password" />
+
+                                    <% } %>
+
+                                        <p class="subtitle">New password</p>
+                                        <input id="new-password" class="title" name="newPassword" type="password"
+                                            placeholder="Enter new password" />
+                                        <p class="subtitle">Confirm Password</p>
+                                        <input id="confirm-password" class="title" name="confirmPassword"
+                                            type="password" placeholder="Enter confirm password" />
+
+                            </article>
+                        </div>
+
+                    </div>
+                </form>
+
+</body>
+
+<script>
+
+</script>
+
+</html>

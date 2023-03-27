@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./ui/head.ejs') %>
+</head>
+
+<body>
+    <%- include('./ui/navbar.ejs') %>
+        <%const URL="/admin/users/filter" %>
+
+            <div class="page-title-nation">
+                <div>
+                    <h1>User</h1>
+                    <%- include('./component/search-form.ejs',{url:URL , q}) %>
+
+
+                </div>
+            </div>
+            <div>
+                <%- include('./component/user-filter.ejs',{url:URL , q, isUser:"true" }) %>
+
+            </div>
+
+            <table class="table" id="myTable" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Birthday</th>
+                        <th>Is Admin</th>
+
+                    </tr>
+                </thead>
+
+                <tbody id="tableBody">
+                    <%- include('./component/user-row.ejs',{users, URL}) %>
+
+                </tbody>
+            </table>
+</body>
+
+</html>

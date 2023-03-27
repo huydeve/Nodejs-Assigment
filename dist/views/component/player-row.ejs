@@ -1,0 +1,85 @@
+
+<% if ( URL.includes("admin")) { %>
+    <% players.forEach((player,index)=> { %>
+        <tr>
+            <td>
+                <%= index %>
+            </td>
+            <td>
+                <figure class="image " style="width: 100px;
+                height: 100px">
+                    <img class="" src="<%= player.image%>" />
+                </figure>
+            </td>
+            <td>
+                <%= player.name %>
+            </td>
+            <td>
+                <%= player.club %>
+            </td>
+            <td>
+                <%= player.position %>
+            </td>
+            <td>
+                <%= player.goals %>
+            </td>
+            <td>
+                <%= player.career %>
+            </td>
+            <td>
+                <%= player.isCaptain %>
+            </td>
+            <td>
+                <%= player.nation.name %>
+            </td>
+            <td>
+                <div class="flex-veritcal" style="display: flex; gap: 16px;">
+                    <form action="<%=URL%>/<%= player._id %>" method="post" onsubmit="return validate(this);">
+                        <input type="hidden" name="_method" value="delete" />
+                        <input required class="button is-danger" type="submit" value="Delete" />
+                    </form>
+                    <!-- update -->
+                    <div>
+                        <%- include('./player-button.ejs', {player, titleButton: "Update" , title:"Update", URL }) %>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <% }) %>
+
+            <tr>
+                <td style="display: flex;">
+                    <div class="limit-row">
+                        <%- include('./limit-row.ejs',{url:URL+ "/filter" , page:currentPage}) %>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><%- include('./pagination.ejs',{url:URL+ "/filter" }) %></td>
+
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+            <% } else { %>
+
+                <div class="container-players" style="margin: 16px 16px;">
+                    <% players.forEach(player=> { %>
+                        <a href=<%=`/players/page/${player._id}` %>>
+                            <%- include('./card-player.ejs', { player, content:true }) %>
+                                <% }) %>
+                        </a>
+                </div>
+
+
+                <div style="display: flex; justify-content: center; gap: 16px">
+                    <%- include('./pagination.ejs',{url:URL+ "/filter" }) %>
+
+                        <%- include('./limit-row.ejs',{url:URL+ "/filter" , page:currentPage}) %>
+
+                </div>
+
+                <% }%>
