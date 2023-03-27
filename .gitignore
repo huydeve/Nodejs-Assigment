@@ -9,9 +9,9 @@ yarn-error.log*
 node_modules/
 
 # TypeScript files
-*.js
-*.js.map
-*.d.ts
+# *.js
+# *.js.map
+# *.d.ts
 
 
 
